@@ -6,7 +6,7 @@ const Cell = (props) => {
     const MINE = "☀";
     const {isMine, neighbourMines, isClicked, x, y} = props.cellstate;
     const {onMouseUp, onContextMenu} = props;
-    const displayed = () => isMine ? MINE : neighbourMines;
+    const displayed = () => isMine ? MINE : neighbourMines || '';
     const getClassName = () => isClicked ? 'cell cell-clicked' : 'cell cell-neutral';
 
     return (

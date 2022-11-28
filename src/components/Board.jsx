@@ -31,26 +31,26 @@ const Board = (props) => {
     };
 
     const calculateNeighbourMines = (newMinesBoard) => {
-        for (let i = 0; i < sizeY; i++) {
-            for (let j = 0; j < sizeX; j++) {
+        for (let x = 0; x < sizeX; x++) {
+            for (let y = 0; y < sizeY; y++) {
                 let countNeighbourMines = 0;
-                if (!newMinesBoard[j][i].isMine) {
-                    for (let checkX = i - 1; checkX < i + 2; checkX++) {
-                        for (let checkY = j - 1; checkY < j + 2; checkY++) {
+                if (!newMinesBoard[x][y].isMine) {
+                    for (let checkY = y - 1; checkY < y + 2; checkY++) {
+                        for (let checkX = x - 1; checkX < x + 2; checkX++) {
                             if (
                                 checkX >= 0 &&
                                 checkX < sizeX &&
                                 checkY >= 0 &&
                                 checkY < sizeY &&
-                                (checkX !== i || checkY !== j) &&
-                                newMinesBoard[checkY][checkX].isMine
+                                (checkX !== x || checkY !== y) &&
+                                newMinesBoard[checkX][checkY].isMine
                             ) {
                                 countNeighbourMines++;
                             }
                         }
                     }
                 }
-                newMinesBoard[j][i].neighbourMines = countNeighbourMines;
+                newMinesBoard[x][y].neighbourMines = countNeighbourMines;
             }
         }
         return newMinesBoard;
@@ -72,14 +72,6 @@ const Board = (props) => {
         createMinesBoard();
     }, []);
 
-    const handleCellClick = (event, cell) => {
-        event.preventDefault();
-        if (isGameOver) {
-            return;
-        }
-        console.log(event.buttons);
-    }
-
     const handleMouseUp = (e, cell) => {
         if (e.button === 0) {
             const board = [...minesBoard];
@@ -99,8 +91,8 @@ const Board = (props) => {
         e.preventDefault();
     }
 
-    const boardBody = minesBoard.map((row) =>
-        <div className='row'>{row.map((cell) =>
+    const boardBody = minesBoard.map((column) =>
+        <div className='column'>{column.map((cell) =>
             <Cell cellstate={cell}
                   onMouseUp={(e) => handleMouseUp(e, cell)}
                   onContextMenu={handleContextMenu}
