@@ -2,3 +2,26 @@
   font-family: sans-serif;
   text-align: center;
 }
+
+.board {
+    display: flex;
+}
+
+.cell {
+    user-select: none;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    border: 2px solid;
+    border-top-color: #aaa;
+    border-left-color: #aaa;
+    border-bottom-color: #777;
+    border-right-color: #777;
+    background-color: #ccc;
+    font-size: larger;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 20px;
+}

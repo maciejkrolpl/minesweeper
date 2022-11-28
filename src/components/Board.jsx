@@ -1,9 +1,10 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import Cell from "./Cell";
 
 const Board = (props) => {
     const {sizeX, sizeY, minesCount} = props;
     const [minesBoard, setMinesBoard] = useState([]);
+    const [isGameOver, setIsGameOver] = useState(false);
     const CELL_INIT_STATE = {
         isMine: false,
         isClicked: false,
@@ -56,15 +57,14 @@ const Board = (props) => {
     };
 
     const genericBoardCreation = () =>
-        Array.from({length: +sizeY}, () =>
-            Array.from({length: +sizeX}, () => Object.create(CELL_INIT_STATE))
+        Array.from({length: +sizeY}, (_, y) =>
+            Array.from({length: +sizeX}, (_, x) => ({x, y}))
         );
 
     const createMinesBoard = () => {
         let newMinesBoard = genericBoardCreation();
         newMinesBoard = generateMines(newMinesBoard);
         newMinesBoard = calculateNeighbourMines(newMinesBoard);
-        console.log(newMinesBoard);
         setMinesBoard(newMinesBoard);
     };
 
@@ -72,17 +72,42 @@ const Board = (props) => {
         createMinesBoard();
     }, []);
 
-    let tbody = minesBoard.map((row) =>
-        <tr>{row.map((cell) => <td><Cell cellstate={cell}/></td>)}</tr>
+    const handleCellClick = (event, cell) => {
+        event.preventDefault();
+        if (isGameOver) {
+            return;
+        }
+        console.log(event.buttons);
+    }
+
+    const handleMouseUp = (e, cell) => {
+        if (e.button === 0) {
+            console.log(cell);
+        }
+        // right click
+        if (e.button === 2) {
+            console.log('R')
+        }
+    }
+
+    const handleContextMenu = e => {
+        e.preventDefault();
+    }
+
+    const boardBody = minesBoard.map((row) =>
+        <div className='row'>{row.map((cell) =>
+            <Cell cellstate={cell}
+                  onMouseUp={(e) => handleMouseUp(e, cell)}
+                  onContextMenu={handleContextMenu}
+            />
+        )}
+        </div>
     );
 
     return (
-        <table>
-            <tbody>
-            {tbody}
-            </tbody>
-
-        </table>
+        <div className='board'>
+            {boardBody}
+        </div>
     );
 };
 
