@@ -18,8 +18,8 @@ const Board = (props) => {
             const randX = Math.floor(Math.random() * sizeX);
             const randY = Math.floor(Math.random() * sizeY);
 
-            if (!newMinesBoard[randY][randX].isMine) {
-                newMinesBoard[randY][randX].isMine = true;
+            if (!newMinesBoard[randX][randY].isMine) {
+                newMinesBoard[randX][randY].isMine = true;
                 i--;
             }
             security -= 1;
@@ -31,8 +31,8 @@ const Board = (props) => {
     };
 
     const calculateNeighbourMines = (newMinesBoard) => {
-        for (let i = 0; i < sizeX; i++) {
-            for (let j = 0; j < sizeY; j++) {
+        for (let i = 0; i < sizeY; i++) {
+            for (let j = 0; j < sizeX; j++) {
                 let countNeighbourMines = 0;
                 if (!newMinesBoard[j][i].isMine) {
                     for (let checkX = i - 1; checkX < i + 2; checkX++) {
@@ -57,8 +57,8 @@ const Board = (props) => {
     };
 
     const genericBoardCreation = () =>
-        Array.from({length: +sizeY}, (_, y) =>
-            Array.from({length: +sizeX}, (_, x) => ({x, y}))
+        Array.from({length: +sizeX}, (_, x) =>
+            Array.from({length: +sizeY}, (_, y) => ({x, y}))
         );
 
     const createMinesBoard = () => {
