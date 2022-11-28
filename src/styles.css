@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 .App {
   font-family: sans-serif;
   text-align: center;
@@ -13,15 +17,28 @@
     height: 20px;
     margin: 0;
     padding: 0;
-    border: 2px solid;
-    border-top-color: #aaa;
-    border-left-color: #aaa;
-    border-bottom-color: #777;
-    border-right-color: #777;
     background-color: #ccc;
     font-size: larger;
     font-weight: bold;
     text-align: center;
     vertical-align: middle;
     line-height: 20px;
+    border-style: solid;
+
+}
+
+.cell-neutral {
+    border-width: 2px;
+    border-top-color: #aaa;
+    border-left-color: #aaa;
+    border-bottom-color: #777;
+    border-right-color: #777;
+}
+
+.cell-clicked {
+    border-width: 1px;
+    border-top-color: #bbb;
+    border-left-color: #bbb;
+    border-right-color: #ddd;
+    border-bottom-color: #ddd;
 }

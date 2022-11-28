@@ -4,14 +4,17 @@ const Cell = (props) => {
     const BLANK = " ";
     const FLAGGED = "!";
     const MINE = "☀";
-    const {isMine, neighbourMines, isClicked, x, y, onClick, onMouseUp, onMouseDown, onContextMenu} = props.cellstate;
-    const displayed = isMine ? MINE : neighbourMines;
+    const {isMine, neighbourMines, isClicked, x, y} = props.cellstate;
+    const {onMouseUp, onContextMenu} = props;
+    const displayed = () => isMine ? MINE : neighbourMines;
+    const getClassName = () => isClicked ? 'cell cell-clicked' : 'cell cell-neutral';
+
     return (
-        <div className="cell"
-             onMouseDown={onMouseDown}
+        <div className={getClassName()}
              onMouseUp={onMouseUp}
-             onContextMenu={onContextMenu}
-             onClick={onClick}>{displayed}</div>
+             onContextMenu={onContextMenu}>
+
+        </div>
     )
 }
 

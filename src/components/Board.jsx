@@ -82,7 +82,12 @@ const Board = (props) => {
 
     const handleMouseUp = (e, cell) => {
         if (e.button === 0) {
-            console.log(cell);
+            const board = [...minesBoard];
+            const {x,y} = cell;
+            console.log(x,y);
+            const clickedCell = board[x][y];
+            clickedCell.isClicked = true;
+            setMinesBoard(board);
         }
         // right click
         if (e.button === 2) {
