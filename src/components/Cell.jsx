@@ -1,9 +1,9 @@
 import React from 'react';
 
 const Cell = (props) => {
-
+console.log(props);
   return (
-    X
+          <div className="cell">{props.cellstate.neighbourMines}</div>
   )
 }
 
