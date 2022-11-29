@@ -42,3 +42,31 @@
     border-right-color: #ddd;
     border-bottom-color: #ddd;
 }
+
+.mines-1::before {
+    color: blue;
+    content: '1';
+}
+
+.mines-2::before {
+    content: '2';
+    color: rgb(0, 123, 0);
+}
+
+.mines-3::before {
+    content: '3';
+    color: red;
+}
+
+.mines-4::before {
+    content: '4';
+    color:  rgb(0, 0, 123);
+}
+
+.cell-mine {
+    border-color: red;
+}
+
+.cell-mine::before {
+    content: '☀'
+}

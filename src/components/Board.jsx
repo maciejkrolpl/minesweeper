@@ -38,10 +38,7 @@ const Board = (props) => {
                     for (let checkY = y - 1; checkY < y + 2; checkY++) {
                         for (let checkX = x - 1; checkX < x + 2; checkX++) {
                             if (
-                                checkX >= 0 &&
-                                checkX < sizeX &&
-                                checkY >= 0 &&
-                                checkY < sizeY &&
+                                isFieldInBoard(checkX, checkY) &&
                                 (checkX !== x || checkY !== y) &&
                                 newMinesBoard[checkX][checkY].isMine
                             ) {
@@ -72,14 +69,59 @@ const Board = (props) => {
         createMinesBoard();
     }, []);
 
+    const isFieldInBoard = (x, y) => x >= 0 && x < sizeX && y >= 0 && y < sizeY;
+    const isMine = (x, y) => minesBoard[x][y].isMine;
+    const isClicked = (x, y) => minesBoard[x][y].isClicked;
+    const neighbourMines = (x, y) => minesBoard[x][y].neighbourMines;
+
+    const getFieldsNeighbours = (x, y) => [
+        [x - 1, y - 1],
+        [x - 1, y],
+        [x - 1, y + 1],
+        [x, y - 1],
+        [x, y + 1],
+        [x + 1, y - 1],
+        [x + 1, y],
+        [x + 1, y + 1],
+    ].filter(([x, y]) => isFieldInBoard(x, y));
+
+    const floodFill = (x, y) => {
+        const board = [...minesBoard];
+        board[x][y].isClicked = true;
+        setMinesBoard(board);
+        if (board[x][y].neighbourMines !== 0) {
+            return;
+        }
+        const toFill = getFieldsNeighbours(x, y)
+            .filter(([x, y]) => !isMine(x, y) && !isClicked(x, y))
+        toFill.forEach(([x, y]) => floodFill(x, y))
+    }
+
+    const leftClickOnField = (x, y) => {
+        console.log('click', x, y)
+        if (isGameOver) {
+            return;
+        }
+
+        const board = [...minesBoard];
+        const {isMine, isClicked, isFlagged} = board[x][y];
+        if (isMine) {
+            alert('Game Over');
+            setIsGameOver(true);
+
+        }
+        if (isClicked || isFlagged) {
+            return;
+        }
+        board[x][y].isClicked = true;
+        setMinesBoard(board);
+        floodFill(x, y);
+    }
+
     const handleMouseUp = (e, cell) => {
         if (e.button === 0) {
-            const board = [...minesBoard];
-            const {x,y} = cell;
-            console.log(x,y);
-            const clickedCell = board[x][y];
-            clickedCell.isClicked = true;
-            setMinesBoard(board);
+            const {x, y} = cell;
+            leftClickOnField(x, y);
         }
         // right click
         if (e.button === 2) {
