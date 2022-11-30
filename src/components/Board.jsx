@@ -69,6 +69,22 @@ const Board = (props) => {
         createMinesBoard();
     }, []);
 
+    useEffect(() => {
+        if (!isGameOver) {
+            return;
+        }
+
+        const board = [...minesBoard];
+        board.forEach(column => column.forEach(cell => {
+            if (cell.isMine) {
+                cell.isClicked = true;
+            }
+        }))
+
+        setMinesBoard(board);
+    }, [isGameOver])
+
+
     const isFieldInBoard = (x, y) => x >= 0 && x < sizeX && y >= 0 && y < sizeY;
     const isMine = (x, y) => minesBoard[x][y].isMine;
     const isClicked = (x, y) => minesBoard[x][y].isClicked;
@@ -98,35 +114,40 @@ const Board = (props) => {
     }
 
     const leftClickOnField = (x, y) => {
-        console.log('click', x, y)
-        if (isGameOver) {
-            return;
-        }
 
         const board = [...minesBoard];
         const {isMine, isClicked, isFlagged} = board[x][y];
-        if (isMine) {
-            alert('Game Over');
-            setIsGameOver(true);
 
-        }
-        if (isClicked || isFlagged) {
+        if (isGameOver || isClicked || isFlagged) {
             return;
         }
+        console.log('click', x, y)
+        if (isMine) {
+            setIsGameOver(true);
+            return;
+        }
+
+
         board[x][y].isClicked = true;
         setMinesBoard(board);
         floodFill(x, y);
     }
 
     const handleMouseUp = (e, cell) => {
+        const {x, y} = cell;
         if (e.button === 0) {
-            const {x, y} = cell;
             leftClickOnField(x, y);
         }
         // right click
         if (e.button === 2) {
-            console.log('R')
+            rightClickOnField(x, y);
         }
+    }
+
+    const rightClickOnField = (x,y) => {
+        const board = [...minesBoard];
+        board[x][y].isFlagged = !board[x][y].isFlagged;
+        setMinesBoard(board);
     }
 
     const handleContextMenu = e => {
