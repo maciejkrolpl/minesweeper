@@ -2,13 +2,20 @@ import React, {useState, useEffect, useRef} from "react";
 import Cell from "./Cell";
 import Controls from "./Controls";
 
-const Board = (props) => {
+const Board = () => {
     const [minesBoard, setMinesBoard] = useState([]);
     const [isGameOver, setIsGameOver] = useState(false);
     const [sizeX, setSizeX] = useState(5);
     const [sizeY, setSizeY] = useState(5);
     const [minesCount, setMinesCount] = useState(5);
+    const [areControlsDisabled, setAreControlsDisabled] = useState(false);
+    const [minesLeft, setMinesLeft] = useState(5);
     const [minesCountRange, setMinesCountRange] = useState([]);
+    const [isGameRun, setIsGameRun] = useState(false);
+
+    useEffect(() => {
+        console.log('isGameRun', isGameRun)
+    }, [isGameRun])
 
     const generateMines = (newMinesBoard) => {
         let i = minesCount;
@@ -57,7 +64,13 @@ const Board = (props) => {
             Array.from({length: +sizeY}, (_, y) => ({x, y}))
         );
 
+    const startNewGame = () => {
+        setAreControlsDisabled(false);
+        createMinesBoard();
+    }
+
     const createMinesBoard = () => {
+        setIsGameOver(false);
         let newMinesBoard = genericBoardCreation();
         newMinesBoard = generateMines(newMinesBoard);
         newMinesBoard = calculateNeighbourMines(newMinesBoard);
@@ -66,7 +79,7 @@ const Board = (props) => {
 
     const countMinesCountRange = () => {
         const minRange = Math.max(sizeX, sizeY);
-        const maxRange = (sizeX-1)*(sizeY-1);
+        const maxRange = (sizeX - 1) * (sizeY - 1);
         setMinesCountRange([minRange, maxRange]);
     }
 
@@ -90,7 +103,6 @@ const Board = (props) => {
                 cell.isClicked = true;
             }
         }))
-
         setMinesBoard(board);
     }, [isGameOver])
 
@@ -122,19 +134,32 @@ const Board = (props) => {
         toFill.forEach(([x, y]) => floodFill(x, y))
     }
 
+    const gameOver = () => {
+        setIsGameOver(true);
+        setIsGameRun(false);
+
+    }
+
     const leftClickOnField = (x, y) => {
+
+
 
         const board = [...minesBoard];
         const {isMine, isClicked, isFlagged} = board[x][y];
 
-        if (isGameOver || isClicked || isFlagged) {
+        if (isGameOver || isClicked) {
             return;
         }
-        console.log('click', x, y)
+
         if (isMine) {
-            setIsGameOver(true);
+            gameOver();
             return;
         }
+        if (!isGameRun) {
+            runGame();
+        }
+
+        //console.log('click', x, y)
 
 
         board[x][y].isClicked = true;
@@ -155,6 +180,9 @@ const Board = (props) => {
 
     const rightClickOnField = (x, y) => {
         const board = [...minesBoard];
+        if (board[x][y].isClicked) {
+            return;
+        }
         board[x][y].isFlagged = !board[x][y].isFlagged;
         setMinesBoard(board);
     }
@@ -167,9 +195,16 @@ const Board = (props) => {
         const {name, value} = e.target;
         if (name === 'sizeX') {
             setSizeX(value);
-        } else if (name==='sizeY') {
+        } else if (name === 'sizeY') {
             setSizeY(value);
         }
+    }
+
+    const runGame = () => {
+        setAreControlsDisabled(true);
+        setIsGameRun(true);
+        // startTimer()
+
     }
 
     const handleChangeMines = e => {
@@ -193,7 +228,9 @@ const Board = (props) => {
                     minesCountRange={minesCountRange}
                     minesCount={minesCount}
                     onSizeChange={handleChangeSize}
-                    onMinesChange={handleChangeMines}/>
+                    onMinesChange={handleChangeMines}
+                    onStartGame={startNewGame}
+                    areControlsDisabled={areControlsDisabled}/>
             </div>
             <div className='board'>
                 {boardBody}

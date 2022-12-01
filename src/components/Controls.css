@@ -1,0 +1,7 @@
+.controls-container {
+    display: flex;
+}
+
+.controls-container div {
+    padding: 0.5rem;
+}
