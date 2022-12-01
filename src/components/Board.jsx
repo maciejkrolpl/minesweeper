@@ -1,15 +1,14 @@
 import React, {useState, useEffect, useRef} from "react";
 import Cell from "./Cell";
+import Controls from "./Controls";
 
 const Board = (props) => {
-    const {sizeX, sizeY, minesCount} = props;
     const [minesBoard, setMinesBoard] = useState([]);
     const [isGameOver, setIsGameOver] = useState(false);
-    const CELL_INIT_STATE = {
-        isMine: false,
-        isClicked: false,
-        neighbourMines: 0
-    };
+    const [sizeX, setSizeX] = useState(5);
+    const [sizeY, setSizeY] = useState(5);
+    const [minesCount, setMinesCount] = useState(5);
+    const [minesCountRange, setMinesCountRange] = useState([]);
 
     const generateMines = (newMinesBoard) => {
         let i = minesCount;
@@ -65,9 +64,20 @@ const Board = (props) => {
         setMinesBoard(newMinesBoard);
     };
 
+    const countMinesCountRange = () => {
+        const minRange = Math.max(sizeX, sizeY);
+        const maxRange = (sizeX-1)*(sizeY-1);
+        setMinesCountRange([minRange, maxRange]);
+    }
+
     useEffect(() => {
         createMinesBoard();
-    }, []);
+        countMinesCountRange();
+    }, [sizeX, sizeY]);
+
+    useEffect(() => {
+        createMinesBoard()
+    }, [minesCount])
 
     useEffect(() => {
         if (!isGameOver) {
@@ -88,7 +98,6 @@ const Board = (props) => {
     const isFieldInBoard = (x, y) => x >= 0 && x < sizeX && y >= 0 && y < sizeY;
     const isMine = (x, y) => minesBoard[x][y].isMine;
     const isClicked = (x, y) => minesBoard[x][y].isClicked;
-    const neighbourMines = (x, y) => minesBoard[x][y].neighbourMines;
 
     const getFieldsNeighbours = (x, y) => [
         [x - 1, y - 1],
@@ -144,7 +153,7 @@ const Board = (props) => {
         }
     }
 
-    const rightClickOnField = (x,y) => {
+    const rightClickOnField = (x, y) => {
         const board = [...minesBoard];
         board[x][y].isFlagged = !board[x][y].isFlagged;
         setMinesBoard(board);
@@ -152,6 +161,19 @@ const Board = (props) => {
 
     const handleContextMenu = e => {
         e.preventDefault();
+    }
+
+    const handleChangeSize = e => {
+        const {name, value} = e.target;
+        if (name === 'sizeX') {
+            setSizeX(value);
+        } else if (name==='sizeY') {
+            setSizeY(value);
+        }
+    }
+
+    const handleChangeMines = e => {
+        setMinesCount(e.target.value);
     }
 
     const boardBody = minesBoard.map((column) =>
@@ -165,9 +187,18 @@ const Board = (props) => {
     );
 
     return (
-        <div className='board'>
-            {boardBody}
-        </div>
+        <>
+            <div className='controls'>
+                <Controls
+                    minesCountRange={minesCountRange}
+                    minesCount={minesCount}
+                    onSizeChange={handleChangeSize}
+                    onMinesChange={handleChangeMines}/>
+            </div>
+            <div className='board'>
+                {boardBody}
+            </div>
+        </>
     );
 };
 

@@ -1,11 +1,7 @@
 import React from 'react';
 
 const Cell = (props) => {
-    const BLANK = " ";
-    const FLAGGED = "!";
-    const MINE = "☀";
     const {cellstate: {isMine, neighbourMines, isClicked, isFlagged, x, y}, onMouseUp, onContextMenu} = props;
-    const displayed = () => isMine ? MINE : '';
     const getClassName = () =>
         isFlagged ? 'cell cell-flagged' :
             isClicked ?
@@ -18,7 +14,6 @@ const Cell = (props) => {
              onContextMenu={onContextMenu}
              title={getTitle()}
         >
-
         </div>
     )
 }

@@ -5,7 +5,7 @@ export default function App() {
     return (
 
         <div className='main'>
-            <Board sizeX="10" sizeY="10" minesCount="20"/>
+            <Board />
         </div>
 
     );
