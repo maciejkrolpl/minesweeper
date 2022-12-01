@@ -9,6 +9,7 @@ const Controls = props => {
         sizeY,
         minesCountRange,
         minesCount,
+        minesLeft,
         onMinesChange,
         onStartGame,
         areControlsDisabled
@@ -61,7 +62,7 @@ const Controls = props => {
             </div>
             <div>
                 <label for="minesLeft">Mines left</label>
-                <input type="text" disabled id="minesLeft" name="minesLeft"/>
+                <input type="text" disabled id="minesLeft" name="minesLeft" value={minesLeft}/>
             </div>
             <div>
                 <button type="button" id="startNewGame" onClick={onStartGame}>Start new game</button>

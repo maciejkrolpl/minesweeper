@@ -3,8 +3,8 @@
 }
 
 .App {
-  font-family: sans-serif;
-  text-align: center;
+    font-family: sans-serif;
+    text-align: center;
 }
 
 .board {
@@ -13,8 +13,8 @@
 
 .cell {
     user-select: none;
-    width: 48px;
-    height: 48px;
+    width: 24px;
+    height: 24px;
     margin: 0;
     padding: 1px;
     background-color: #ccc;
@@ -61,10 +61,10 @@
 
 .mines-4::before {
     content: '4';
-    color:  rgb(0, 0, 123);
+    color: rgb(0, 0, 123);
 }
 
-.cell-mine {
+.cell-mine, .cell-wrong {
     border-color: red;
 }
 
@@ -73,6 +73,13 @@
     font-size: 0.75em;
 }
 
-.cell-mine::before {
+.cell-mine::before, .cell-wrong::before {
     content: '☀'
+}
+
+.cell-wrong {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 100 100'><path d='M 4 0 L 4 0 L 0 0 L 0 4 L 96 100 L 100 100 L 100 96' fill='red' /><path d='M 96 0 L 96 0 L 100 0 L 100 4 L 4 100 L 0 100 L 0 96' fill='red' /></svg>");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 100% 100%, auto;
 }
