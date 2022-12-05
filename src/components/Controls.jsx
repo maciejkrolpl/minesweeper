@@ -1,5 +1,6 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import './Controls.css';
+import Timer from './Timer';
 
 const Controls = props => {
 
@@ -12,8 +13,10 @@ const Controls = props => {
         minesLeft,
         onMinesChange,
         onStartGame,
-        areControlsDisabled
+        areControlsDisabled,
+        isRunTimer
     } = props;
+    const [timerId, setTimerId] = useState();
     const minSize = 5;
     const maxSize = 20;
 
@@ -23,10 +26,11 @@ const Controls = props => {
         controls.forEach(control => control.disabled = areControlsDisabled);
     }, [areControlsDisabled])
 
+
     const sizeOptions = () => Array.from({length: maxSize - minSize + 1}, (_, i) => {
         const value = i + minSize;
         return (
-            <option value={value}>{value}</option>
+            <option value={value} key={value}>{value}</option>
         );
     })
 
@@ -35,7 +39,7 @@ const Controls = props => {
         return Array.from({length: maxMines - minMines + 1}, (_, i) => {
             const value = i + minMines;
             return (
-                <option value={value}>{value}</option>
+                <option value={value} key={value}>{value}</option>
             );
         })
     }
@@ -43,30 +47,34 @@ const Controls = props => {
     return (
         <div className="controls-container">
             <div>
-                <label for="sizeX">Columns</label>
+                <label htmlFor="sizeX">Columns</label>
                 <select name="sizeX" id="sizeX" onChange={onSizeChange} value={sizeX}>
                     {sizeOptions()}
                 </select>
             </div>
             <div>
-                <label for="sizeY">Rows</label>
+                <label htmlFor="sizeY">Rows</label>
                 <select name="sizeY" id="sizeY" onChange={onSizeChange} value={sizeY}>
                     {sizeOptions()}
                 </select>
             </div>
             <div>
-                <label for="minesCount">Mines</label>
+                <label htmlFor="minesCount">Mines</label>
                 <select name="minesCount" id="minesCount" onChange={onMinesChange} value={minesCount}>
                     {minesOptions()}
                 </select>
             </div>
             <div>
-                <label for="minesLeft">Mines left</label>
+                <label htmlFor="minesLeft">Mines left</label>
                 <input type="text" disabled id="minesLeft" name="minesLeft" value={minesLeft}/>
             </div>
             <div>
+                <label htmlFor="timer">Timer</label>
+                
+            </div>
+            <div>
                 <button type="button" id="startNewGame" onClick={onStartGame}>Start new game</button>
-
+                <Timer isRunTimer={isRunTimer} />
             </div>
         </div>
     )

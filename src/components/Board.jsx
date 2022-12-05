@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Cell from "./Cell";
 import Controls from "./Controls";
 
@@ -9,9 +9,10 @@ const Board = () => {
     const [sizeY, setSizeY] = useState(5);
     const [minesCount, setMinesCount] = useState(5);
     const [areControlsDisabled, setAreControlsDisabled] = useState(false);
-    const minesLeft =  useRef(5);
+    const minesLeft = useRef(minesCount);
     const [minesCountRange, setMinesCountRange] = useState([]);
     const [isGameRun, setIsGameRun] = useState(false);
+    const [isRunTimer, setIsRunTimer] = useState(false);
     const isFieldInBoard = (x, y) => x >= 0 && x < sizeX && y >= 0 && y < sizeY;
     const isMine = (x, y) => minesBoard[x][y].isMine;
     const isFlagged = (x, y) => minesBoard[x][y].isFlagged;
@@ -61,14 +62,15 @@ const Board = () => {
     };
 
     const genericBoardCreation = () =>
-        Array.from({length: +sizeX}, (_, x) =>
-            Array.from({length: +sizeY}, (_, y) => ({x, y}))
+        Array.from({ length: +sizeX }, (_, x) =>
+            Array.from({ length: +sizeY }, (_, y) => ({ x, y }))
         );
 
     const startNewGame = () => {
         setAreControlsDisabled(false);
         minesLeft.current = minesCount;
         createMinesBoard();
+        setIsRunTimer(false);
     }
 
     const createMinesBoard = () => {
@@ -133,35 +135,58 @@ const Board = () => {
             return;
         }
         const toFill = getFieldsNeighbours(x, y)
-            .filter(([x, y]) => !isMine(x, y) && !isClicked(x, y) && !isFlagged(x,y))
+            .filter(([x, y]) => !isMine(x, y) && !isClicked(x, y) && !isFlagged(x, y))
         toFill.forEach(([x, y]) => floodFill(x, y))
     }
 
     const gameOver = () => {
         setIsGameOver(true);
         setIsGameRun(false);
+        setIsRunTimer(false);
+    }
+
+    const doGameWon = () => {
+        console.log('dogamewon')
+        setIsGameRun(false);
+        setAllMinesFlagged();
+        setIsRunTimer(false);
+    }
+
+    const setAllMinesFlagged = () => {
+        const board = [...minesBoard].map(column => column.map(cell => cell.isMine ?
+            { ...cell, isFlagged: true } : { ...cell }))
+        setMinesBoard(board);
     }
 
     const leftClickOnField = (x, y) => {
         const board = [...minesBoard];
-        const {isMine, isClicked, isFlagged} = board[x][y];
+        const { isMine, isClicked } = board[x][y];
 
         if (isClicked) {
             return;
         }
 
-       if (isMine) {
-           gameOver();
-           return;
+        if (isMine) {
+            gameOver();
+            return;
 
-       }
-
-        //console.log('click', x, y)
-
+        }
 
         board[x][y].isClicked = true;
         setMinesBoard(board);
         floodFill(x, y);
+
+        checkIsWon();
+    }
+
+    const checkIsWon = () => {
+        const notRevealed = minesBoard.reduce((sum, column) =>
+            column.filter(cell => (!cell.isClicked)).length + sum
+            , 0)
+
+        if (notRevealed === minesCount) {
+            doGameWon();
+        }
     }
 
     const handleMouseUp = (e, cell) => {
@@ -172,7 +197,7 @@ const Board = () => {
             runGame();
         }
 
-        const {x, y} = cell;
+        const { x, y } = cell;
         if (e.button === 0) {
             leftClickOnField(x, y);
         }
@@ -187,7 +212,7 @@ const Board = () => {
         if (board[x][y].isClicked) {
             return;
         }
-        minesLeft.current = (minesLeft.current + (board[x][y].isFlagged ?  1 : -1) );
+        minesLeft.current = (minesLeft.current + (board[x][y].isFlagged ? 1 : -1));
         board[x][y].isFlagged = !board[x][y].isFlagged;
         setMinesBoard(board);
     }
@@ -197,7 +222,7 @@ const Board = () => {
     }
 
     const handleChangeSize = e => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         if (name === 'sizeX') {
             setSizeX(value);
         } else if (name === 'sizeY') {
@@ -206,23 +231,26 @@ const Board = () => {
     }
 
     const runGame = () => {
+
         setAreControlsDisabled(true);
         setIsGameRun(true);
-        // startTimer()
+        setIsRunTimer(true);
 
     }
 
     const handleChangeMines = e => {
-        const {value} = e.target;
+        const { value } = e.target;
         setMinesCount(+value);
         minesLeft.current = +value;
     }
 
-    const boardBody = minesBoard.map((column) =>
-        <div className='column'>{column.map((cell) =>
-            <Cell cellstate={cell}
-                  onMouseUp={(e) => handleMouseUp(e, cell)}
-                  onContextMenu={handleContextMenu}
+    const boardBody = minesBoard.map((column, index) =>
+        <div className='column' key={index}>{column.map((cell) =>
+            <Cell
+                cellstate={cell}
+                onMouseUp={(e) => handleMouseUp(e, cell)}
+                onContextMenu={handleContextMenu}
+                key={`${cell.x}${cell.y}`}
             />
         )}
         </div>
@@ -238,7 +266,9 @@ const Board = () => {
                     onSizeChange={handleChangeSize}
                     onMinesChange={handleChangeMines}
                     onStartGame={startNewGame}
-                    areControlsDisabled={areControlsDisabled}/>
+                    areControlsDisabled={areControlsDisabled}
+                    isRunTimer={isRunTimer}
+                    />
             </div>
             <div className='board'>
                 {boardBody}
