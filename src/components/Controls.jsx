@@ -69,12 +69,11 @@ const Controls = props => {
                 <input type="text" disabled id="minesLeft" name="minesLeft" value={minesLeft}/>
             </div>
             <div>
-                <label htmlFor="timer">Timer</label>
-                
+                <Timer isRunTimer={isRunTimer} />
             </div>
             <div>
                 <button type="button" id="startNewGame" onClick={onStartGame}>Start new game</button>
-                <Timer isRunTimer={isRunTimer} />
+                
             </div>
         </div>
     )

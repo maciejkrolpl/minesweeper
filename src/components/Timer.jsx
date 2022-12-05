@@ -21,7 +21,10 @@ const Timer = props => {
     }, [isRunTimer])
 
     return (
-        <input type="text" disabled id="timer" name="timer" value={seconds} />
+        <>
+            <label htmlFor="timer">Timer</label>
+            <input type="text" disabled id="timer" name="timer" value={seconds} />
+        </>
     )
 }
 
