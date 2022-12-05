@@ -154,7 +154,7 @@ const Board = () => {
     }
 
     const doGameWon = () => {
-        console.log('dogamewon')
+        minesLeft.current = 0;
         setIsGameRun(false);
         setAllMinesFlagged();
         setIsRunTimer(false);
