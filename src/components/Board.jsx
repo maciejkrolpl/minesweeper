@@ -174,9 +174,9 @@ const Board = () => {
         const fieldsNeighbours = getFieldsNeighbours(x, y);
 
         const flagsOnNeighbours = fieldsNeighbours
-            .filter(([x,y]) => isFlagged(x, y)).length;
+            .filter(([x, y]) => isFlagged(x, y)).length;
 
-        if (!flagsOnNeighbours || flagsOnNeighbours < minesOnNeighbours(x,y)) {
+        if (!flagsOnNeighbours || flagsOnNeighbours < minesOnNeighbours(x, y)) {
             return;
         }
 
@@ -188,14 +188,9 @@ const Board = () => {
             fieldsNeighbours
                 .filter(([x, y]) => !isClicked(x, y) && !isFlagged(x, y))
                 .forEach(([x, y]) => floodFill(x, y));
-
         } else {
-            console.log('źle')
+            gameOver();
         }
-
-
-
-
     }
 
     const leftClickOnField = (x, y) => {
@@ -240,7 +235,6 @@ const Board = () => {
         if (e.button === 0) {
             leftClickOnField(x, y);
         }
-        // right click
         if (e.button === 2) {
             rightClickOnField(x, y);
         }
