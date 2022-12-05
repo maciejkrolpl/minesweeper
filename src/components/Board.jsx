@@ -3,7 +3,6 @@ import Cell from "./Cell";
 import Controls from "./Controls";
 
 const Board = () => {
-    
     const [minesBoard, setMinesBoard] = useState([]);
     const [isGameOver, setIsGameOver] = useState(false);
     const [sizeX, setSizeX] = useState(5);
@@ -26,15 +25,21 @@ const Board = () => {
     }
     const minesOnNeighbours = (x, y) => minesBoard[x][y].neighbourMines || 0;
 
+    const isArrayInArray = (arrContainer, arrItem) => JSON.stringify(arrContainer).includes(JSON.stringify(arrItem))
 
-    const generateMines = (newMinesBoard) => {
+    const generateMines = (newMinesBoard, clickedX, clickedY) => {
         let i = minesCount;
-        let security = 100;
+        let security = 150;
+        const fieldsNeighbours = getFieldsNeighbours(clickedX, clickedY);
+
         do {
             const randX = Math.floor(Math.random() * sizeX);
             const randY = Math.floor(Math.random() * sizeY);
 
-            if (!newMinesBoard[randX][randY].isMine) {
+            if (!newMinesBoard[randX][randY].isMine
+                && (randX !== clickedX && randY !== clickedY)
+                && (!isArrayInArray(fieldsNeighbours, [randX, randY]))
+            ) {
                 newMinesBoard[randX][randY].isMine = true;
                 i--;
             }
@@ -83,11 +88,9 @@ const Board = () => {
     }
 
     const createMinesBoard = () => {
-        setIsGameOver(false);
         let newMinesBoard = genericBoardCreation();
-        newMinesBoard = generateMines(newMinesBoard);
-        newMinesBoard = calculateNeighbourMines(newMinesBoard);
         setMinesBoard(newMinesBoard);
+        setIsGameOver(false);
     };
 
     const countMinesCountRange = () => {
@@ -121,9 +124,6 @@ const Board = () => {
         }))
         setMinesBoard(board);
     }, [isGameOver])
-
-
-
 
     const getFieldsNeighbours = (x, y) => [
         [x - 1, y - 1],
@@ -210,7 +210,6 @@ const Board = () => {
         board[x][y].isClicked = true;
         setMinesBoard(board);
         floodFill(x, y);
-
         checkIsWon();
     }
 
@@ -228,15 +227,14 @@ const Board = () => {
         if (isGameOver) {
             return;
         }
+        const { x, y } = cell;
         if (!isGameRun) {
-            runGame();
+            runGame(x, y);
         }
 
-        const { x, y } = cell;
         if (e.button === 0) {
             leftClickOnField(x, y);
-        }
-        if (e.button === 2) {
+        } else if (e.button === 2) {
             rightClickOnField(x, y);
         }
     }
@@ -264,12 +262,18 @@ const Board = () => {
         }
     }
 
-    const runGame = () => {
-        console.log('rungame')
+    const createBoardAndMines = (x, y) => {
+        let board = [...minesBoard];
+        board = generateMines(board, x, y);
+        board = calculateNeighbourMines(board);
+        setMinesBoard(board);
+    }
+
+    const runGame = (x, y) => {
+        createBoardAndMines(x, y);
         setAreControlsDisabled(true);
         setIsGameRun(true);
         setIsRunTimer(true);
-
     }
 
     const handleChangeMines = e => {
