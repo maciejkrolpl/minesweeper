@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Cell from "./Cell";
 import Controls from "./Controls";
 
@@ -67,6 +67,7 @@ const Board = () => {
         );
 
     const startNewGame = () => {
+        setIsGameRun(false);
         setAreControlsDisabled(false);
         minesLeft.current = minesCount;
         createMinesBoard();
@@ -231,7 +232,7 @@ const Board = () => {
     }
 
     const runGame = () => {
-
+        console.log('rungame')
         setAreControlsDisabled(true);
         setIsGameRun(true);
         setIsRunTimer(true);
