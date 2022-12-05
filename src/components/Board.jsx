@@ -3,6 +3,7 @@ import Cell from "./Cell";
 import Controls from "./Controls";
 
 const Board = () => {
+    
     const [minesBoard, setMinesBoard] = useState([]);
     const [isGameOver, setIsGameOver] = useState(false);
     const [sizeX, setSizeX] = useState(5);

@@ -7,7 +7,6 @@ const Timer = props => {
     const [seconds, setSeconds] = useState(0);
 
     useEffect(() => {
-        console.log('isRuntimer', isRunTimer)
         if (isRunTimer) {
             let secs = 0;
             setSeconds(secs);

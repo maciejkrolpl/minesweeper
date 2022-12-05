@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, { useEffect } from 'react';
 import './Controls.css';
 import Timer from './Timer';
 
@@ -16,7 +16,6 @@ const Controls = props => {
         areControlsDisabled,
         isRunTimer
     } = props;
-    const [timerId, setTimerId] = useState();
     const minSize = 5;
     const maxSize = 20;
 
@@ -27,7 +26,7 @@ const Controls = props => {
     }, [areControlsDisabled])
 
 
-    const sizeOptions = () => Array.from({length: maxSize - minSize + 1}, (_, i) => {
+    const sizeOptions = () => Array.from({ length: maxSize - minSize + 1 }, (_, i) => {
         const value = i + minSize;
         return (
             <option value={value} key={value}>{value}</option>
@@ -36,7 +35,7 @@ const Controls = props => {
 
     const minesOptions = () => {
         const [minMines, maxMines] = minesCountRange;
-        return Array.from({length: maxMines - minMines + 1}, (_, i) => {
+        return Array.from({ length: maxMines - minMines + 1 }, (_, i) => {
             const value = i + minMines;
             return (
                 <option value={value} key={value}>{value}</option>
@@ -66,14 +65,14 @@ const Controls = props => {
             </div>
             <div>
                 <label htmlFor="minesLeft">Mines left</label>
-                <input type="text" disabled id="minesLeft" name="minesLeft" value={minesLeft}/>
+                <input type="text" disabled id="minesLeft" name="minesLeft" value={minesLeft} />
             </div>
             <div>
                 <Timer isRunTimer={isRunTimer} />
             </div>
             <div>
                 <button type="button" id="startNewGame" onClick={onStartGame}>Start new game</button>
-                
+
             </div>
         </div>
     )
