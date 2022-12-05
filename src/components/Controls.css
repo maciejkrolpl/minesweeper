@@ -1,5 +1,6 @@
 .controls-container {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .controls-container div {

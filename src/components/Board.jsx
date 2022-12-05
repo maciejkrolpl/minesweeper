@@ -15,8 +15,15 @@ const Board = () => {
     const [isRunTimer, setIsRunTimer] = useState(false);
     const isFieldInBoard = (x, y) => x >= 0 && x < sizeX && y >= 0 && y < sizeY;
     const isMine = (x, y) => minesBoard[x][y].isMine;
-    const isFlagged = (x, y) => minesBoard[x][y].isFlagged;
+    const isFlagged = (x, y) => minesBoard[x][y].isFlagged || false;
     const isClicked = (x, y) => minesBoard[x][y].isClicked;
+    const isEmpty = (x, y) => {
+        const cell = minesBoard[x][y];
+        return cell.isClicked && (
+            cell.neighbourMines === 0 || !('neighbourMines' in cell)
+        );
+    }
+    const minesOnNeighbours = (x, y) => minesBoard[x][y].neighbourMines || 0;
 
 
     const generateMines = (newMinesBoard) => {
@@ -159,18 +166,49 @@ const Board = () => {
         setMinesBoard(board);
     }
 
+    const leftClickOnClicked = (x, y) => {
+        if (isEmpty(x, y)) {
+            return;
+        }
+
+        const fieldsNeighbours = getFieldsNeighbours(x, y);
+
+        const flagsOnNeighbours = fieldsNeighbours
+            .filter(([x,y]) => isFlagged(x, y)).length;
+
+        if (!flagsOnNeighbours || flagsOnNeighbours < minesOnNeighbours(x,y)) {
+            return;
+        }
+
+        const wellFlaggedNeighbours = getFieldsNeighbours(x, y)
+            .filter(([x, y]) => isMine(x, y) && isFlagged(x, y))
+            .length;
+
+        if (wellFlaggedNeighbours === minesOnNeighbours(x, y)) {
+            fieldsNeighbours
+                .filter(([x, y]) => !isClicked(x, y) && !isFlagged(x, y))
+                .forEach(([x, y]) => floodFill(x, y));
+
+        } else {
+            console.log('źle')
+        }
+
+
+
+
+    }
+
     const leftClickOnField = (x, y) => {
         const board = [...minesBoard];
         const { isMine, isClicked } = board[x][y];
 
         if (isClicked) {
-            return;
+            leftClickOnClicked(x, y);
         }
 
         if (isMine) {
             gameOver();
             return;
-
         }
 
         board[x][y].isClicked = true;
@@ -269,7 +307,7 @@ const Board = () => {
                     onStartGame={startNewGame}
                     areControlsDisabled={areControlsDisabled}
                     isRunTimer={isRunTimer}
-                    />
+                />
             </div>
             <div className='board'>
                 {boardBody}
