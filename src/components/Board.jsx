@@ -28,7 +28,7 @@ const Board = () => {
     const [sizeY, setSizeY] = useState(0);
     const [minesCount, setMinesCount] = useState(0);
     const [areControlsDisabled, setAreControlsDisabled] = useState(false);
-    const minesLeft = useRef(minesCount);
+    const [minesLeft, setMinesLeft] = useState(0);
     const [minesCountRange, setMinesCountRange] = useState([]);
     const [isGameRun, setIsGameRun] = useState(false);
     const [isRunTimer, setIsRunTimer] = useState(false);
@@ -111,7 +111,7 @@ const Board = () => {
     const startNewGame = () => {
         setIsGameRun(false);
         setAreControlsDisabled(false);
-        minesLeft.current = minesCount;
+        setMinesLeft(minesCount);
         createMinesBoard();
         setIsRunTimer(false);
     }
@@ -184,7 +184,7 @@ const Board = () => {
     }
 
     const doGameWon = () => {
-        minesLeft.current = 0;
+        setMinesLeft(0);
         setIsGameRun(false);
         setAllMinesFlagged();
         setIsRunTimer(false);
@@ -273,7 +273,7 @@ const Board = () => {
         if (board[x][y].isClicked) {
             return;
         }
-        minesLeft.current = (minesLeft.current + (board[x][y].isFlagged ? 1 : -1));
+        setMinesLeft(minesLeft + (board[x][y].isFlagged ? 1 : -1));
         board[x][y].isFlagged = !board[x][y].isFlagged;
         setMinesBoard(board);
     }
@@ -305,11 +305,11 @@ const Board = () => {
         setIsRunTimer(true);
     }
 
-    const handleChangeMines = e => {
-        const { value } = e.target;
-        setMinesCount(+value);
-        minesLeft.current = +value;
-    }
+    // const handleChangeMines = e => {
+    //     const { value } = e.target;
+    //     setMinesCount(+value);
+    //     minesLeft.current = +value;
+    // }
 
     const handleLevelSelect = (e, x, y, m) => {
         let sizeX;
@@ -355,7 +355,7 @@ const Board = () => {
                 <Controls
                     minesCountRange={minesCountRange}
                     minesCount={minesCount}
-                    minesLeft={minesLeft.current}
+                    minesLeft={minesLeft}
                     onStartGame={startNewGame}
                     areControlsDisabled={areControlsDisabled}
                     isRunTimer={isRunTimer}
