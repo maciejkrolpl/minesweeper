@@ -32,10 +32,6 @@
 
 }
 
-.cell-neutral {
-
-}
-
 .cell-clicked {
     border-width: 1px;
     border-top-color: #bbb;
@@ -66,11 +62,26 @@
 
 .mines-5::before {
     content: '5';
-    color: rgb(123,0,0);
+    color: rgb(123, 0, 0);
 }
 
+.mines-6::before {
+    content: '6';
+    color: rgb(0, 123, 123);
+}
 
-.cell-mine, .cell-wrong {
+.mines-7::before {
+    content: '7';
+    color: rgb(0, 0, 0);
+}
+
+.mines-8::before {
+    content: '8';
+    color: rgb(123, 123, 123);
+}
+
+.cell-mine,
+.cell-wrong {
     border-color: red;
 }
 
@@ -79,7 +90,8 @@
     font-size: 0.75em;
 }
 
-.cell-mine::before, .cell-wrong::before {
+.cell-mine::before,
+.cell-wrong::before {
     content: '☀'
 }
 
