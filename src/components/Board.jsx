@@ -27,8 +27,8 @@ const Board = () => {
     const [sizeX, setSizeX] = useState(0);
     const [sizeY, setSizeY] = useState(0);
     const [minesCount, setMinesCount] = useState(0);
-    const [areControlsDisabled, setAreControlsDisabled] = useState(false);
     const [minesLeft, setMinesLeft] = useState(0);
+    const [areControlsDisabled, setAreControlsDisabled] = useState(false);
     const [minesCountRange, setMinesCountRange] = useState([]);
     const [isGameRun, setIsGameRun] = useState(false);
     const [isRunTimer, setIsRunTimer] = useState(false);
@@ -43,14 +43,14 @@ const Board = () => {
         );
     }
 
-    useState(() => {
+    useEffect(() => {
         const { sizeX, sizeY, minesCount } = Object.values(LEVEL_SETTINGS)[0];
         setSizeX(sizeX);
         setSizeY(sizeY);
         setMinesCount(minesCount);
+        setMinesLeft(minesCount);
         setLevel(Object.keys(LEVEL_SETTINGS)[0])
-
-    })
+    }, [])
 
     const minesOnNeighbours = (x, y) => minesBoard[x][y].neighbourMines || 0;
 
@@ -108,10 +108,12 @@ const Board = () => {
             Array.from({ length: +sizeY }, (_, y) => ({ x, y }))
         );
 
-    const startNewGame = () => {
+    const startNewGame = (doSetMinesLeft) => {
         setIsGameRun(false);
         setAreControlsDisabled(false);
-        setMinesLeft(minesCount);
+        if (doSetMinesLeft) {
+            setMinesLeft(minesCount);
+        }
         createMinesBoard();
         setIsRunTimer(false);
     }
@@ -282,15 +284,6 @@ const Board = () => {
         e.preventDefault();
     }
 
-    const handleChangeSize = e => {
-        const { name, value } = e.target;
-        if (name === 'sizeX') {
-            setSizeX(value);
-        } else if (name === 'sizeY') {
-            setSizeY(value);
-        }
-    }
-
     const createBoardAndMines = (x, y) => {
         let board = [...minesBoard];
         board = generateMines(board, x, y);
@@ -305,19 +298,14 @@ const Board = () => {
         setIsRunTimer(true);
     }
 
-    // const handleChangeMines = e => {
-    //     const { value } = e.target;
-    //     setMinesCount(+value);
-    //     minesLeft.current = +value;
-    // }
-
     const handleLevelSelect = (e, x, y, m) => {
+        console.log('handleLevelSelect')
         let sizeX;
         let sizeY;
         let minesCount;
         if (e) {
             const levelName = e.target.id;
-            
+
             if (!levelName in LEVEL_SETTINGS) {
                 throw new Error('Invalid level name')
             }
@@ -328,13 +316,13 @@ const Board = () => {
             setLevel('custom')
             sizeX = x;
             sizeY = y;
-            minesCount = m;
+            minesC = m;
         }
-
         setSizeX(sizeX);
         setSizeY(sizeY);
         setMinesCount(minesCount);
-        startNewGame();
+        setMinesLeft(minesCount);
+        startNewGame(false);
     }
 
     const boardBody = minesBoard.map((column, index) =>
@@ -343,7 +331,7 @@ const Board = () => {
                 cellstate={cell}
                 onMouseUp={(e) => handleMouseUp(e, cell)}
                 onContextMenu={handleContextMenu}
-                key={`${cell.x}${cell.y}`}
+                key={`${cell.x}x${cell.y}`}
             />
         )}
         </div>
@@ -356,7 +344,7 @@ const Board = () => {
                     minesCountRange={minesCountRange}
                     minesCount={minesCount}
                     minesLeft={minesLeft}
-                    onStartGame={startNewGame}
+                    onStartGame={() => startNewGame(true)}
                     areControlsDisabled={areControlsDisabled}
                     isRunTimer={isRunTimer}
                     onLevelSelect={handleLevelSelect}
