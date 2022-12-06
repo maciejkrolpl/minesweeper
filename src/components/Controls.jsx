@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import './Controls.css';
 import Timer from './Timer';
+import DropDownButton from './DropDownButton';
 
 const Controls = props => {
 
@@ -54,6 +55,28 @@ const Controls = props => {
             </div>
             <div>
                 <button type="button" id="expert" onClick={onLevelSelect}>Expert</button>
+            </div>
+            <div>
+                <DropDownButton label="Custom sizes" onSizeChange={onSizeChange}>
+                    <div>
+                        <label htmlFor="sizeX">Columns</label>
+                        <select name="sizeX" id="sizeX" onChange={onSizeChange} value={sizeX}>
+                            {sizeOptions()}
+                        </select>
+                    </div>
+                    <div>
+                        <label htmlFor="sizeY">Rows</label>
+                        <select name="sizeY" id="sizeY" onChange={onSizeChange} value={sizeY}>
+                            {sizeOptions()}
+                        </select>
+                    </div>
+                    <div>
+                        <label htmlFor="minesCount">Mines</label>
+                        <select name="minesCount" id="minesCount" onChange={onMinesChange} value={minesCount}>
+                            {minesOptions()}
+                        </select>
+                    </div>
+                </DropDownButton>
             </div>
             <div>
                 <label htmlFor="minesLeft">Mines left</label>

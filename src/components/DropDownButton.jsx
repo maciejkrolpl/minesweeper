@@ -1,21 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './DropDownButton.css';
 
 const DropDownButton = (props) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   const showDropDown = () => {
-    document.getElementById('myDropdown').classList.toggle('show');
+    setIsOpen(!isOpen);
   };
 
-  window.onclick = (event) => {
-    if ([...event.target.classList].includes('dropbtn')) {
-      return;
+  document.onclick = ({ target }) => {
+    if (!target.closest('.dropdown')) {
+      setIsOpen(false);
     }
-    const dropdowns = document.getElementsByClassName('dropdown-content');
-    [...dropdowns].forEach((dropdown) => {
-      if (dropdown.classList.contains('show')) {
-        dropdown.classList.remove('show');
-      }
-    });
   };
 
   return (
@@ -23,9 +19,11 @@ const DropDownButton = (props) => {
       <button onClick={showDropDown} className="dropbtn">
         {props.label}
       </button>
-      <div id="myDropdown" className="dropdown-content">
-        {props.children}
-      </div>
+      {isOpen ? (
+        <div id="myDropdown" className="dropdown-content">
+          {props.children}
+        </div>
+      ) : null}
     </div>
   );
 };
