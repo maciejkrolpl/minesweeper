@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Cell from "./Cell";
 import Controls from "./Controls";
-
+import Modal from './Modal';
 const Board = () => {
     const LEVEL_SETTINGS = {
         beginner: {
@@ -21,6 +21,7 @@ const Board = () => {
         }
     }
 
+    const [isShownModal, setIsShownModal] = useState(true);
     const [minesBoard, setMinesBoard] = useState([]);
     const [level, setLevel] = useState('');
     const [isGameOver, setIsGameOver] = useState(false);
@@ -51,6 +52,8 @@ const Board = () => {
         setMinesLeft(minesCount);
         setLevel(Object.keys(LEVEL_SETTINGS)[0])
     }, [])
+
+    const toggleShowModal = () => setIsShownModal(!isShownModal)
 
     const minesOnNeighbours = (x, y) => minesBoard[x][y].neighbourMines || 0;
 
@@ -190,6 +193,7 @@ const Board = () => {
         setIsGameRun(false);
         setAllMinesFlagged();
         setIsRunTimer(false);
+        toggleShowModal();
     }
 
     const setAllMinesFlagged = () => {
@@ -356,6 +360,13 @@ const Board = () => {
             <div className='board'>
                 {boardBody}
             </div>
+
+            <Modal onClose={toggleShowModal} show={isShownModal} title="High Scores">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis
+                deserunt corrupti, ut fugit magni qui quasi nisi amet repellendus non
+                fuga omnis a sed impedit explicabo accusantium nihil doloremque
+                consequuntur.
+            </Modal>
         </>
     );
 };
