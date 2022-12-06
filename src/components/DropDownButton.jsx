@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './DropDownButton.css';
+import Button from './Button';
 
 const DropDownButton = (props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,9 +17,9 @@ const DropDownButton = (props) => {
 
   return (
     <div className="dropdown">
-      <button onClick={showDropDown} className="dropbtn">
+      <Button onclick={showDropDown} className="dropbtn">
         {props.label}
-      </button>
+      </Button>
       {isOpen ? (
         <div id="myDropdown" className="dropdown-content">
           {props.children}

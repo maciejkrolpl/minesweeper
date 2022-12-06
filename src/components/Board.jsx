@@ -13,7 +13,7 @@ const Board = () => {
             sizeX: 16,
             sizeY: 16,
             minesCount: 40
-        }, 
+        },
         expert: {
             sizeX: 30,
             sizeY: 16,
@@ -22,10 +22,11 @@ const Board = () => {
     }
 
     const [minesBoard, setMinesBoard] = useState([]);
+    const [level, setLevel] = useState('');
     const [isGameOver, setIsGameOver] = useState(false);
-    const [sizeX, setSizeX] = useState(5);
-    const [sizeY, setSizeY] = useState(5);
-    const [minesCount, setMinesCount] = useState(5);
+    const [sizeX, setSizeX] = useState(0);
+    const [sizeY, setSizeY] = useState(0);
+    const [minesCount, setMinesCount] = useState(0);
     const [areControlsDisabled, setAreControlsDisabled] = useState(false);
     const minesLeft = useRef(minesCount);
     const [minesCountRange, setMinesCountRange] = useState([]);
@@ -41,6 +42,16 @@ const Board = () => {
             cell.neighbourMines === 0 || !('neighbourMines' in cell)
         );
     }
+
+    useState(() => {
+        const { sizeX, sizeY, minesCount } = Object.values(LEVEL_SETTINGS)[0];
+        setSizeX(sizeX);
+        setSizeY(sizeY);
+        setMinesCount(minesCount);
+        setLevel(Object.keys(LEVEL_SETTINGS)[0])
+
+    })
+
     const minesOnNeighbours = (x, y) => minesBoard[x][y].neighbourMines || 0;
 
     const isArrayInArray = (arrContainer, arrItem) => JSON.stringify(arrContainer).includes(JSON.stringify(arrItem))
@@ -302,12 +313,13 @@ const Board = () => {
 
     const handleLevelSelect = e => {
         const levelName = e.target.id;
+        setLevel(levelName);
 
         if (!levelName in LEVEL_SETTINGS) {
             throw new Error('Invalid level name')
         }
 
-        const { sizeX, sizeY, minesCount} = LEVEL_SETTINGS[levelName];
+        const { sizeX, sizeY, minesCount } = LEVEL_SETTINGS[levelName];
 
         setSizeX(sizeX);
         setSizeY(sizeY);
@@ -340,6 +352,7 @@ const Board = () => {
                     areControlsDisabled={areControlsDisabled}
                     isRunTimer={isRunTimer}
                     onLevelSelect={handleLevelSelect}
+                    level={level}
                 />
             </div>
             <div className='board'>

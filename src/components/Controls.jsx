@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import './Controls.css';
 import Timer from './Timer';
 import DropDownButton from './DropDownButton';
+import Button from './Button';
 
 const Controls = props => {
 
@@ -14,7 +15,7 @@ const Controls = props => {
         minesLeft,
         onMinesChange,
         onStartGame,
-        areControlsDisabled,
+        level,
         isRunTimer,
         onLevelSelect
     } = props;
@@ -26,7 +27,6 @@ const Controls = props => {
     //         .map(id => document.getElementById(id));
     //     controls.forEach(control => control.disabled = areControlsDisabled);
     // }, [areControlsDisabled])
-
 
     const sizeOptions = () => Array.from({ length: maxSize - minSize + 1 }, (_, i) => {
         const value = i + minSize;
@@ -48,16 +48,16 @@ const Controls = props => {
     return (
         <div className="controls-container">
             <div>
-                <button type="button" id="beginner" onClick={onLevelSelect}>Beginner</button>
+                <Button id="beginner" onclick={onLevelSelect} isActive={level === 'beginner'}>Beginner</Button>
             </div>
             <div>
-                <button type="button" id="intermediate" onClick={onLevelSelect}>Intermediate</button>
+                <Button id="intermediate" onclick={onLevelSelect} isActive={level === 'intermediate'}>Intermediate</Button>
             </div>
             <div>
-                <button type="button" id="expert" onClick={onLevelSelect}>Expert</button>
+                <Button id="expert" onclick={onLevelSelect} isActive={level === 'expert'}>Expert</Button>
             </div>
             <div>
-                <DropDownButton label="Custom sizes" onSizeChange={onSizeChange}>
+                <DropDownButton label="Custom sizes" onSizeChange={onSizeChange} id="custom" isActive={level==='custom'}>
                     <div>
                         <label htmlFor="sizeX">Columns</label>
                         <select name="sizeX" id="sizeX" onChange={onSizeChange} value={sizeX}>
@@ -76,6 +76,9 @@ const Controls = props => {
                             {minesOptions()}
                         </select>
                     </div>
+                    <div>
+                        <Button onclick={onLevelSelect} >OK</Button>
+                    </div>
                 </DropDownButton>
             </div>
             <div>
@@ -86,7 +89,7 @@ const Controls = props => {
                 <Timer isRunTimer={isRunTimer} />
             </div>
             <div>
-                <button type="button" id="startNewGame" onClick={onStartGame}>Start new game</button>
+                <Button type="button" id="startNewGame" onclick={onStartGame}>Start new game</Button>
 
             </div>
         </div>
