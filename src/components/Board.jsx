@@ -3,6 +3,24 @@ import Cell from "./Cell";
 import Controls from "./Controls";
 
 const Board = () => {
+    const LEVEL_SETTINGS = {
+        beginner: {
+            sizeX: 8,
+            sizeY: 8,
+            minesCount: 10
+        },
+        intermediate: {
+            sizeX: 16,
+            sizeY: 16,
+            minesCount: 40
+        }, 
+        expert: {
+            sizeX: 30,
+            sizeY: 16,
+            minesCount: 99
+        }
+    }
+
     const [minesBoard, setMinesBoard] = useState([]);
     const [isGameOver, setIsGameOver] = useState(false);
     const [sizeX, setSizeX] = useState(5);
@@ -282,6 +300,21 @@ const Board = () => {
         minesLeft.current = +value;
     }
 
+    const handleLevelSelect = e => {
+        const levelName = e.target.id;
+
+        if (!levelName in LEVEL_SETTINGS) {
+            throw new Error('Invalid level name')
+        }
+
+        const { sizeX, sizeY, minesCount} = LEVEL_SETTINGS[levelName];
+
+        setSizeX(sizeX);
+        setSizeY(sizeY);
+        setMinesCount(minesCount);
+        minesLeft.current = minesCount;
+    }
+
     const boardBody = minesBoard.map((column, index) =>
         <div className='column' key={index}>{column.map((cell) =>
             <Cell
@@ -306,6 +339,7 @@ const Board = () => {
                     onStartGame={startNewGame}
                     areControlsDisabled={areControlsDisabled}
                     isRunTimer={isRunTimer}
+                    onLevelSelect={handleLevelSelect}
                 />
             </div>
             <div className='board'>

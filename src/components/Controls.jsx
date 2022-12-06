@@ -14,16 +14,17 @@ const Controls = props => {
         onMinesChange,
         onStartGame,
         areControlsDisabled,
-        isRunTimer
+        isRunTimer,
+        onLevelSelect
     } = props;
     const minSize = 5;
     const maxSize = 20;
 
-    useEffect(() => {
-        const controls = ['sizeX', 'sizeY', 'minesCount']
-            .map(id => document.getElementById(id));
-        controls.forEach(control => control.disabled = areControlsDisabled);
-    }, [areControlsDisabled])
+    // useEffect(() => {
+    //     const controls = ['sizeX', 'sizeY', 'minesCount']
+    //         .map(id => document.getElementById(id));
+    //     controls.forEach(control => control.disabled = areControlsDisabled);
+    // }, [areControlsDisabled])
 
 
     const sizeOptions = () => Array.from({ length: maxSize - minSize + 1 }, (_, i) => {
@@ -46,22 +47,13 @@ const Controls = props => {
     return (
         <div className="controls-container">
             <div>
-                <label htmlFor="sizeX">Columns</label>
-                <select name="sizeX" id="sizeX" onChange={onSizeChange} value={sizeX}>
-                    {sizeOptions()}
-                </select>
+                <button type="button" id="beginner" onClick={onLevelSelect}>Beginner</button>
             </div>
             <div>
-                <label htmlFor="sizeY">Rows</label>
-                <select name="sizeY" id="sizeY" onChange={onSizeChange} value={sizeY}>
-                    {sizeOptions()}
-                </select>
+                <button type="button" id="intermediate" onClick={onLevelSelect}>Intermediate</button>
             </div>
             <div>
-                <label htmlFor="minesCount">Mines</label>
-                <select name="minesCount" id="minesCount" onChange={onMinesChange} value={minesCount}>
-                    {minesOptions()}
-                </select>
+                <button type="button" id="expert" onClick={onLevelSelect}>Expert</button>
             </div>
             <div>
                 <label htmlFor="minesLeft">Mines left</label>
