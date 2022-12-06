@@ -334,7 +334,7 @@ const Board = () => {
         setSizeX(sizeX);
         setSizeY(sizeY);
         setMinesCount(minesCount);
-        minesLeft.current = minesCount;
+        startNewGame();
     }
 
     const boardBody = minesBoard.map((column, index) =>

@@ -64,6 +64,12 @@
     color: rgb(0, 0, 123);
 }
 
+.mines-5::before {
+    content: '5';
+    color: rgb(123,0,0);
+}
+
+
 .cell-mine, .cell-wrong {
     border-color: red;
 }

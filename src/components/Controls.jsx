@@ -19,26 +19,24 @@ const Controls = props => {
         onLevelSelect
     } = props;
     const minSize = 5;
-    const maxSize = 20;
+    const maxSize = 30;
 
     const [tempX, setTempX] = useState(0);
     const [tempY, setTempY] = useState(0);
     const [tempMines, setTempMines] = useState(0);
 
     useEffect(() => {
-        console.log('x',sizeX)
         setTempX(sizeX)
-    }, [sizeX])
-
-    useEffect(() => {
-        console.log('y',sizeY)
         setTempY(sizeY)
-    }, [sizeY])
-
-    useEffect(() => {
-        console.log('m', minesCount)
         setTempMines(minesCount)
-    }, [minesCount])
+        console.log(sizeX, sizeY, minesCount)
+    }, [sizeX, sizeY, minesCount])
+
+    // useEffect(() => {
+    // }, [sizeY])
+
+    // useEffect(() => {
+    // }, [minesCount])
 
     // useEffect(() => {
     //     const controls = ['sizeX', 'sizeY', 'minesCount']
@@ -48,7 +46,7 @@ const Controls = props => {
 
     const onSizeChange = e => {
         const elem = e.target.id;
-        const value = e.target.value;
+        const value = +e.target.value;
 
         const actions = {
             sizeX: setTempX,
