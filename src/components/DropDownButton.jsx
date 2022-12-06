@@ -1,32 +1,45 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import './DropDownButton.css';
 import Button from './Button';
 
-const DropDownButton = (props) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const showDropDown = () => {
-    setIsOpen(!isOpen);
-  };
-
-  document.onclick = ({ target }) => {
-    if (!target.closest('.dropdown')) {
-      setIsOpen(false);
+class DropDownButton extends Component {
+  constructor(props) {
+    super(props);
+    document.onclick = ({ target }) => {
+      if (!target.closest('.dropdown')) {
+        this.hideDropDown();
+      }
+    };
+    this.state = {
+      isOpen: false
     }
-  };
+  }
 
-  return (
-    <div className="dropdown">
-      <Button onclick={showDropDown} className="dropbtn">
-        {props.label}
-      </Button>
-      {isOpen ? (
-        <div id="myDropdown" className="dropdown-content">
-          {props.children}
-        </div>
-      ) : null}
-    </div>
-  );
-};
+  toggleDropDown = () => {
+    this.setState(prevState => ({
+      isOpen: !prevState.isOpen
+    }));
+  }
+
+  hideDropDown = () => {
+    this.setState({ isOpen: false })
+  }
+
+  render() {
+    return (
+      <div className="dropdown">
+        <Button onclick={this.toggleDropDown} className="dropbtn">
+          {this.props.label}
+        </Button>
+        {this.state.isOpen ? (
+          <div id="myDropdown" className="dropdown-content">
+            {this.props.children}
+          </div>
+        ) : null}
+      </div>
+    )
+  }
+
+}
 
 export default DropDownButton;

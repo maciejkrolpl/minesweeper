@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import './Controls.css';
-import Timer from './Timer';
-import DropDownButton from './DropDownButton';
+import React, { createRef, useEffect, useState } from 'react';
 import Button from './Button';
-import { useEffect } from 'react';
+import './Controls.css';
+import DropDownButton from './DropDownButton';
+import Timer from './Timer';
 
 const Controls = props => {
 
@@ -24,6 +23,8 @@ const Controls = props => {
     const [tempX, setTempX] = useState(0);
     const [tempY, setTempY] = useState(0);
     const [tempMines, setTempMines] = useState(0);
+
+    const dropDownReference = createRef();
 
     useEffect(() => {
         setTempX(sizeX)
@@ -65,6 +66,7 @@ const Controls = props => {
     })
 
     const onCustomLevelSelect = e => {
+        dropDownReference.current.hideDropDown();
         onLevelSelect(null, tempX, tempY, tempMines);
     }
 
@@ -90,7 +92,7 @@ const Controls = props => {
                 <Button id="expert" onclick={onLevelSelect} isActive={level === 'expert'}>Expert</Button>
             </div>
             <div>
-                <DropDownButton label="Custom sizes" id="custom" isActive={level === 'custom'}>
+                <DropDownButton label="Custom sizes" id="custom" isActive={level === 'custom'} ref={dropDownReference}>
                     <div>
                         <label htmlFor="sizeX">Columns</label>
                         <select name="sizeX" id="sizeX" onChange={onSizeChange} value={tempX}>
