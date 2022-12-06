@@ -311,15 +311,25 @@ const Board = () => {
         minesLeft.current = +value;
     }
 
-    const handleLevelSelect = e => {
-        const levelName = e.target.id;
-        setLevel(levelName);
+    const handleLevelSelect = (e, x, y, m) => {
+        let sizeX;
+        let sizeY;
+        let minesCount;
+        if (e) {
+            const levelName = e.target.id;
+            
+            if (!levelName in LEVEL_SETTINGS) {
+                throw new Error('Invalid level name')
+            }
+            setLevel(levelName);
 
-        if (!levelName in LEVEL_SETTINGS) {
-            throw new Error('Invalid level name')
+            ({ sizeX, sizeY, minesCount } = LEVEL_SETTINGS[levelName]);
+        } else {
+            setLevel('custom')
+            sizeX = x;
+            sizeY = y;
+            minesCount = m;
         }
-
-        const { sizeX, sizeY, minesCount } = LEVEL_SETTINGS[levelName];
 
         setSizeX(sizeX);
         setSizeY(sizeY);
@@ -346,13 +356,13 @@ const Board = () => {
                     minesCountRange={minesCountRange}
                     minesCount={minesCount}
                     minesLeft={minesLeft.current}
-                    onSizeChange={handleChangeSize}
-                    onMinesChange={handleChangeMines}
                     onStartGame={startNewGame}
                     areControlsDisabled={areControlsDisabled}
                     isRunTimer={isRunTimer}
                     onLevelSelect={handleLevelSelect}
                     level={level}
+                    sizeX={sizeX}
+                    sizeY={sizeY}
                 />
             </div>
             <div className='board'>
