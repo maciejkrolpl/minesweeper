@@ -92,7 +92,7 @@ const Controls = props => {
                 <Button id="expert" onclick={onLevelSelect} isActive={level === 'expert'}>Expert</Button>
             </div>
             <div>
-                <DropDownButton label="Custom sizes" id="custom" isActive={level === 'custom'} ref={dropDownReference}>
+                <DropDownButton label="Custom size" id="custom" isActive={level === 'custom'} ref={dropDownReference}>
                     <div>
                         <label htmlFor="sizeX">Columns</label>
                         <select name="sizeX" id="sizeX" onChange={onSizeChange} value={tempX}>

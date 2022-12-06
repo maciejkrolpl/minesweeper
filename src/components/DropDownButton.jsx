@@ -28,7 +28,7 @@ class DropDownButton extends Component {
   render() {
     return (
       <div className="dropdown">
-        <Button onclick={this.toggleDropDown} className="dropbtn">
+        <Button onclick={this.toggleDropDown} className="dropbtn" isActive={this.props.isActive}>
           {this.props.label}
         </Button>
         {this.state.isOpen ? (

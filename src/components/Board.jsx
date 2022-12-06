@@ -316,7 +316,7 @@ const Board = () => {
             setLevel('custom')
             sizeX = x;
             sizeY = y;
-            minesC = m;
+            minesCount = m;
         }
         setSizeX(sizeX);
         setSizeY(sizeY);
