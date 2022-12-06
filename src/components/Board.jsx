@@ -232,7 +232,11 @@ const Board = () => {
 
     const leftClickOnField = (x, y) => {
         const board = [...minesBoard];
-        const { isMine, isClicked } = board[x][y];
+        const { isMine, isClicked, isFlagged } = board[x][y];
+
+        if (isFlagged) {
+            return;
+        }
 
         if (isClicked) {
             leftClickOnClicked(x, y);
