@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Cell from "./Cell";
 import Controls from "./Controls";
 import Modal from './Modal';
+import HighScores from "./HighScores";
 const Board = () => {
     const LEVEL_SETTINGS = {
         beginner: {
@@ -362,10 +363,7 @@ const Board = () => {
             </div>
 
             <Modal onClose={toggleShowModal} show={isShownModal} title="High Scores">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis
-                deserunt corrupti, ut fugit magni qui quasi nisi amet repellendus non
-                fuga omnis a sed impedit explicabo accusantium nihil doloremque
-                consequuntur.
+                <HighScores />
             </Modal>
         </>
     );
