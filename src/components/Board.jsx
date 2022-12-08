@@ -8,7 +8,7 @@ const Board = () => {
         beginner: {
             sizeX: 8,
             sizeY: 8,
-            minesCount: 3
+            minesCount: 1
         },
         intermediate: {
             sizeX: 16,
@@ -24,6 +24,7 @@ const Board = () => {
 
     const [timerId, setTimerId] = useState(null);
     const [seconds, setSeconds] = useState(0);
+    const [miliSeconds, setMiliSeconds] = useState(0);
     const [isShownModal, setIsShownModal] = useState(false);
     const [minesBoard, setMinesBoard] = useState([]);
     const [level, setLevel] = useState('');
@@ -49,11 +50,16 @@ const Board = () => {
 
     useEffect(() => {
         if (isRunTimer) {
-            let secs = 0;
-            setSeconds(secs);
+            let msecs = 0;
+            let prevSec = 0;
+            setMiliSeconds(msecs);
+            setSeconds(0);
             const tId = setInterval(() => {
-                setSeconds(++secs);
-            }, 1000)
+                setMiliSeconds(++msecs);
+                if (Math.floor(msecs/100) > prevSec) {
+                    setSeconds(++prevSec);
+                }
+            }, 10)
             setTimerId(tId);
         } else {
             clearInterval(timerId);
@@ -128,6 +134,8 @@ const Board = () => {
         );
 
     const startNewGame = (doSetMinesLeft) => {
+        setSeconds(0);
+        setMiliSeconds(0);
         setIsGameRun(false);
         setAreControlsDisabled(false);
         if (doSetMinesLeft) {
@@ -146,7 +154,7 @@ const Board = () => {
     const countMinesCountRange = () => {
         const minRange = Math.max(sizeX, sizeY);
         const maxRange = (sizeX - 1) * (sizeY - 1);
-        setMinesCountRange([minRange, maxRange]);
+        setMinesCountRange([1, maxRange]);
     }
 
     useEffect(() => {
@@ -317,13 +325,11 @@ const Board = () => {
 
     const runGame = (x, y) => {
         createBoardAndMines(x, y);
-        setAreControlsDisabled(true);
-        setIsGameRun(true);
         setIsRunTimer(true);
+        setIsGameRun(true);
     }
 
     const handleLevelSelect = (e, x, y, m) => {
-        console.log('handleLevelSelect')
         let sizeX;
         let sizeY;
         let minesCount;
@@ -382,7 +388,7 @@ const Board = () => {
             </div>
 
             <Modal onClose={toggleShowModal} show={isShownModal} title="High Scores">
-                <HighScores  score={seconds} />
+                <HighScores  score={miliSeconds} saveHighScore={level !== 'custom'} />
             </Modal>
         </>
     );

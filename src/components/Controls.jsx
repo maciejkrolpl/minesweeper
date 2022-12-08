@@ -32,7 +32,6 @@ const Controls = props => {
         setTempX(sizeX)
         setTempY(sizeY)
         setTempMines(minesCount)
-        console.log(sizeX, sizeY, minesCount)
     }, [sizeX, sizeY, minesCount])
 
 
