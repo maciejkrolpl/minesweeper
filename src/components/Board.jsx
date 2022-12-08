@@ -22,6 +22,8 @@ const Board = () => {
         }
     }
 
+    const [timerId, setTimerId] = useState(null);
+    const [seconds, setSeconds] = useState(0);
     const [isShownModal, setIsShownModal] = useState(true);
     const [minesBoard, setMinesBoard] = useState([]);
     const [level, setLevel] = useState('');
@@ -44,6 +46,19 @@ const Board = () => {
             cell.neighbourMines === 0 || !('neighbourMines' in cell)
         );
     }
+
+    useEffect(() => {
+        if (isRunTimer) {
+            let secs = 0;
+            setSeconds(secs);
+            const tId = setInterval(() => {
+                setSeconds(++secs);
+            }, 1000)
+            setTimerId(tId);
+        } else {
+            clearInterval(timerId);
+        }
+    }, [isRunTimer])
 
     useEffect(() => {
         const { sizeX, sizeY, minesCount } = Object.values(LEVEL_SETTINGS)[0];
@@ -355,7 +370,7 @@ const Board = () => {
                     minesLeft={minesLeft}
                     onStartGame={() => startNewGame(true)}
                     areControlsDisabled={areControlsDisabled}
-                    isRunTimer={isRunTimer}
+                    seconds={seconds}
                     onLevelSelect={handleLevelSelect}
                     level={level}
                     sizeX={sizeX}

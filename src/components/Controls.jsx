@@ -2,7 +2,6 @@ import React, { createRef, useEffect, useState } from 'react';
 import Button from './Button';
 import './Controls.css';
 import DropDownButton from './DropDownButton';
-import Timer from './Timer';
 
 const Controls = props => {
 
@@ -14,17 +13,20 @@ const Controls = props => {
         minesLeft,
         onStartGame,
         level,
-        isRunTimer,
+        seconds,
         onLevelSelect
     } = props;
     const minSize = 5;
     const maxSize = 30;
+
 
     const [tempX, setTempX] = useState(0);
     const [tempY, setTempY] = useState(0);
     const [tempMines, setTempMines] = useState(0);
 
     const dropDownReference = createRef();
+
+
 
     useEffect(() => {
         setTempX(sizeX)
@@ -33,17 +35,6 @@ const Controls = props => {
         console.log(sizeX, sizeY, minesCount)
     }, [sizeX, sizeY, minesCount])
 
-    // useEffect(() => {
-    // }, [sizeY])
-
-    // useEffect(() => {
-    // }, [minesCount])
-
-    // useEffect(() => {
-    //     const controls = ['sizeX', 'sizeY', 'minesCount']
-    //         .map(id => document.getElementById(id));
-    //     controls.forEach(control => control.disabled = areControlsDisabled);
-    // }, [areControlsDisabled])
 
     const onSizeChange = e => {
         const elem = e.target.id;
@@ -121,7 +112,8 @@ const Controls = props => {
                 <input type="text" disabled id="minesLeft" name="minesLeft" value={minesLeft} />
             </div>
             <div>
-                <Timer isRunTimer={isRunTimer} />
+                <label htmlFor="timer">Timer</label>
+                <input type="text" disabled id="timer" name="timer" value={seconds} />
             </div>
             <div>
                 <Button type="button" id="startNewGame" onclick={onStartGame}>Start new game</Button>
