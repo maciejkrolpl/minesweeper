@@ -8,7 +8,7 @@ const Board = () => {
         beginner: {
             sizeX: 8,
             sizeY: 8,
-            minesCount: 10
+            minesCount: 3
         },
         intermediate: {
             sizeX: 16,
@@ -24,7 +24,7 @@ const Board = () => {
 
     const [timerId, setTimerId] = useState(null);
     const [seconds, setSeconds] = useState(0);
-    const [isShownModal, setIsShownModal] = useState(true);
+    const [isShownModal, setIsShownModal] = useState(false);
     const [minesBoard, setMinesBoard] = useState([]);
     const [level, setLevel] = useState('');
     const [isGameOver, setIsGameOver] = useState(false);
@@ -382,7 +382,7 @@ const Board = () => {
             </div>
 
             <Modal onClose={toggleShowModal} show={isShownModal} title="High Scores">
-                <HighScores />
+                <HighScores  score={seconds} />
             </Modal>
         </>
     );
