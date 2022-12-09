@@ -5,15 +5,20 @@ import Button from './Button';
 const HighScores = props => {
     const {
         score,
-        saveHighScore
+        level
     } = props;
 
     const MAX_SCORE_SIZE = 10;
-
+    const saveHighScore = level !== 'custom';
     const miliSecsToSecs = ms => ms / 100;
 
+    const levelsHighScore = () => {
+        console.log({ level }, (highScores[level] || []))
+        return (highScores[level] || []);
+    }
 
-    const [highScores, setHighScores] = useLocalStorage('highscores', [])
+
+    const [highScores, setHighScores] = useLocalStorage('highscores', {})
     const [userName, setUserName] = useState('');
 
     const changeUserName = e => {
@@ -27,15 +32,20 @@ const HighScores = props => {
 
     const saveScore = () => {
         const timeStamp = Date.now();
-        const scores = [...highScores, { score, userName, timeStamp }].sort((a, b) => a.score - b.score);
-        if (scores.length > MAX_SCORE_SIZE) {
-            scores.length = MAX_SCORE_SIZE;
+        const scoresList = [...levelsHighScore(), { score, userName, timeStamp }].sort((a, b) => a.score - b.score);
+        if (scoresList.length > MAX_SCORE_SIZE) {
+            scoresList.length = MAX_SCORE_SIZE;
         }
-        setHighScores(scores);
+        const scoreToSave = {
+            ...highScores,
+            [level]: scoresList
+        }
+        console.log('scoretosave', scoreToSave)
+        setHighScores(scoreToSave);
         hideForm();
     }
 
-    const displayHighScores = highScores
+    const displayHighScores = () => (levelsHighScore() || [])
         .sort((a, b) => a.score - b.score)
         .map((score) =>
             <div key={score.timeStamp}>
@@ -44,9 +54,9 @@ const HighScores = props => {
         )
 
     const scoreInRange = () => {
-        const onlyTimes = highScores.map(score => score.score);
+        const onlyTimes = (levelsHighScore() || []).map(score => score.score);
         const maxTime = Math.max(...onlyTimes);
-        return score < maxTime;
+        return onlyTimes.length < MAX_SCORE_SIZE || score < maxTime;
     }
 
 
@@ -61,7 +71,7 @@ const HighScores = props => {
                             <Button onclick={saveScore}>Save</Button>
                         </div>}
                     <div>
-                        {displayHighScores}
+                        {displayHighScores()}
                     </div>
                 </>}
         </div>

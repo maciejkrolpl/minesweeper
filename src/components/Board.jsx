@@ -13,12 +13,12 @@ const Board = () => {
         intermediate: {
             sizeX: 16,
             sizeY: 16,
-            minesCount: 40
+            minesCount: 5
         },
         expert: {
             sizeX: 30,
             sizeY: 16,
-            minesCount: 99
+            minesCount: 9
         }
     }
 
@@ -388,7 +388,7 @@ const Board = () => {
             </div>
 
             <Modal onClose={toggleShowModal} show={isShownModal} title="High Scores">
-                <HighScores  score={miliSeconds} saveHighScore={level !== 'custom'} />
+                <HighScores  score={miliSeconds} level={level} />
             </Modal>
         </>
     );
