@@ -5,11 +5,9 @@ import Button from "./Button";
 
 
 const Modal = props => {
-    const { onClose, show, children, title } = props;
+    const { onClose,  children, title } = props;
 
-    if (!show) {
-        return null;
-    }
+    
     return (
         <div className="background">
             <div className="modal" id="modal">
@@ -29,7 +27,6 @@ const Modal = props => {
 
 Modal.propTypes = {
     onClose: PropTypes.func.isRequired,
-    show: PropTypes.bool.isRequired
 };
 
 export default Modal;

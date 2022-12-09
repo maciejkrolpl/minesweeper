@@ -41,6 +41,7 @@
     background: #eee;
     padding: 0.5rem 1rem;
     border-radius: 0.3rem;
+    text-align: right;
 }
 
 .modal .actions button {

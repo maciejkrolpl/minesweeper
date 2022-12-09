@@ -1,18 +1,20 @@
 import useLocalStorage from './../utils/useLocalStorage';
 import { useState } from 'react';
 import Button from './Button';
+import './HighScores.css';
 
 const HighScores = props => {
     const {
         score,
-        level
+        level,
+        display
     } = props;
 
     const MAX_SCORE_SIZE = 10;
     const saveHighScore = level !== 'custom';
     const miliSecsToSecs = ms => ms / 100;
 
-    const levelsHighScore = () => {
+    const levelsHighScore = (level) => {
         console.log({ level }, (highScores[level] || []))
         return (highScores[level] || []);
     }
@@ -32,7 +34,7 @@ const HighScores = props => {
 
     const saveScore = () => {
         const timeStamp = Date.now();
-        const scoresList = [...levelsHighScore(), { score, userName, timeStamp }].sort((a, b) => a.score - b.score);
+        const scoresList = [...levelsHighScore(level), { score, userName, timeStamp }].sort((a, b) => a.score - b.score);
         if (scoresList.length > MAX_SCORE_SIZE) {
             scoresList.length = MAX_SCORE_SIZE;
         }
@@ -45,7 +47,7 @@ const HighScores = props => {
         hideForm();
     }
 
-    const displayHighScores = () => (levelsHighScore() || [])
+    const displayHighScores = (level) => (levelsHighScore(level) || [])
         .sort((a, b) => a.score - b.score)
         .map((score) =>
             <div key={score.timeStamp}>
@@ -53,25 +55,40 @@ const HighScores = props => {
             </div>
         )
 
-    const scoreInRange = () => {
-        const onlyTimes = (levelsHighScore() || []).map(score => score.score);
+    const isScoreInRange = (level) => {
+        const onlyTimes = (levelsHighScore(level) || []).map(score => score.score);
         const maxTime = Math.max(...onlyTimes);
         return onlyTimes.length < MAX_SCORE_SIZE || score < maxTime;
     }
 
+
+    if (display) {
+        return (
+            <div className="display-container">
+                {
+                    ['beginner', 'intermediate', 'expert'].map(lvl =>
+                        <div key={lvl}>
+                            <h3>{lvl}</h3>
+                            {displayHighScores(lvl)}
+                        </div>
+                    )
+                }
+            </div>
+        )
+    }
 
     return (
         <div>
             <p>Your score is {miliSecsToSecs(score)} seconds.</p>
             {saveHighScore &&
                 <>
-                    {scoreInRange() &&
+                    {isScoreInRange(level) &&
                         <div id="form">Enter your name:<br />
                             <input type="text" name="userName" id="userName" value={userName} onChange={changeUserName} />
                             <Button onclick={saveScore}>Save</Button>
                         </div>}
                     <div>
-                        {displayHighScores()}
+                        {displayHighScores(level)}
                     </div>
                 </>}
         </div>

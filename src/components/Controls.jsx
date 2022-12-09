@@ -14,7 +14,8 @@ const Controls = props => {
         onStartGame,
         level,
         seconds,
-        onLevelSelect
+        onLevelSelect,
+        onShowHighScores
     } = props;
     const minSize = 5;
     const maxSize = 30;
@@ -116,7 +117,9 @@ const Controls = props => {
             </div>
             <div>
                 <Button type="button" id="startNewGame" onclick={onStartGame}>Start new game</Button>
-
+            </div>
+            <div>
+                <Button type="button" id="showHighScores" onclick={onShowHighScores}>Show HighScores</Button>
             </div>
         </div>
     )

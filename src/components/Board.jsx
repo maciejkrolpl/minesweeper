@@ -26,6 +26,7 @@ const Board = () => {
     const [seconds, setSeconds] = useState(0);
     const [miliSeconds, setMiliSeconds] = useState(0);
     const [isShownModal, setIsShownModal] = useState(false);
+    const [isShownHighScores, setIsShownHighScores] = useState(false);
     const [minesBoard, setMinesBoard] = useState([]);
     const [level, setLevel] = useState('');
     const [isGameOver, setIsGameOver] = useState(false);
@@ -56,7 +57,7 @@ const Board = () => {
             setSeconds(0);
             const tId = setInterval(() => {
                 setMiliSeconds(++msecs);
-                if (Math.floor(msecs/100) > prevSec) {
+                if (Math.floor(msecs / 100) > prevSec) {
                     setSeconds(++prevSec);
                 }
             }, 10)
@@ -76,6 +77,7 @@ const Board = () => {
     }, [])
 
     const toggleShowModal = () => setIsShownModal(!isShownModal)
+    const toggleHighScores = () => setIsShownHighScores(!isShownHighScores)
 
     const minesOnNeighbours = (x, y) => minesBoard[x][y].neighbourMines || 0;
 
@@ -329,6 +331,11 @@ const Board = () => {
         setIsGameRun(true);
     }
 
+    const showHighScores = () => {
+        console.log('show HiSco');
+        setIsShownHighScores(true);
+    }
+
     const handleLevelSelect = (e, x, y, m) => {
         let sizeX;
         let sizeY;
@@ -375,6 +382,7 @@ const Board = () => {
                     minesCount={minesCount}
                     minesLeft={minesLeft}
                     onStartGame={() => startNewGame(true)}
+                    onShowHighScores={showHighScores}
                     areControlsDisabled={areControlsDisabled}
                     seconds={seconds}
                     onLevelSelect={handleLevelSelect}
@@ -387,9 +395,18 @@ const Board = () => {
                 {boardBody}
             </div>
 
-            <Modal onClose={toggleShowModal} show={isShownModal} title="High Scores">
-                <HighScores  score={miliSeconds} level={level} />
-            </Modal>
+            {
+                isShownModal &&
+                <Modal onClose={toggleShowModal} title="High Scores">
+                    <HighScores score={miliSeconds} level={level} />
+                </Modal>
+            }
+            {
+                isShownHighScores &&
+                <Modal onClose={toggleHighScores} title="High Scores">
+                    <HighScores display='true' />
+                </Modal>
+            }
         </>
     );
 };
