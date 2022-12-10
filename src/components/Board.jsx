@@ -1,53 +1,55 @@
-import React, { useEffect, useRef, useState } from "react";
-import Cell from "./Cell";
-import Controls from "./Controls";
+import React, { useEffect, useState } from 'react';
+import Cell from './Cell';
+import Controls from './Controls';
 import Modal from './Modal';
-import HighScores from "./HighScores";
-const Board = () => {
+import HighScores from './HighScores';
+
+function Board() {
     const LEVEL_SETTINGS = {
         beginner: {
             sizeX: 8,
             sizeY: 8,
-            minesCount: 1
+            minesCount: 10,
         },
         intermediate: {
             sizeX: 16,
             sizeY: 16,
-            minesCount: 5
+            minesCount: 40,
         },
         expert: {
             sizeX: 30,
             sizeY: 16,
-            minesCount: 9
-        }
-    }
+            minesCount: 99,
+        },
+    };
 
-    const [timerId, setTimerId] = useState(null);
-    const [seconds, setSeconds] = useState(0);
-    const [miliSeconds, setMiliSeconds] = useState(0);
-    const [isShownModal, setIsShownModal] = useState(false);
-    const [isShownHighScores, setIsShownHighScores] = useState(false);
-    const [minesBoard, setMinesBoard] = useState([]);
-    const [level, setLevel] = useState('');
-    const [isGameOver, setIsGameOver] = useState(false);
-    const [sizeX, setSizeX] = useState(0);
-    const [sizeY, setSizeY] = useState(0);
-    const [minesCount, setMinesCount] = useState(0);
-    const [minesLeft, setMinesLeft] = useState(0);
     const [areControlsDisabled, setAreControlsDisabled] = useState(false);
-    const [minesCountRange, setMinesCountRange] = useState([]);
+    const [isGameOver, setIsGameOver] = useState(false);
     const [isGameRun, setIsGameRun] = useState(false);
     const [isRunTimer, setIsRunTimer] = useState(false);
+    const [isShownHighScores, setIsShownHighScores] = useState(false);
+    const [isShownModal, setIsShownModal] = useState(false);
+    const [level, setLevel] = useState('');
+    const [miliSeconds, setMiliSeconds] = useState(0);
+    const [minesBoard, setMinesBoard] = useState([]);
+    const [minesCount, setMinesCount] = useState(0);
+    const [minesCountRange, setMinesCountRange] = useState([]);
+    const [minesLeft, setMinesLeft] = useState(0);
+    const [seconds, setSeconds] = useState(0);
+    const [sizeX, setSizeX] = useState(0);
+    const [sizeY, setSizeY] = useState(0);
+    const [timerId, setTimerId] = useState(null);
     const isFieldInBoard = (x, y) => x >= 0 && x < sizeX && y >= 0 && y < sizeY;
     const isMine = (x, y) => minesBoard[x][y].isMine;
     const isFlagged = (x, y) => minesBoard[x][y].isFlagged || false;
     const isClicked = (x, y) => minesBoard[x][y].isClicked;
     const isEmpty = (x, y) => {
         const cell = minesBoard[x][y];
-        return cell.isClicked && (
-            cell.neighbourMines === 0 || !('neighbourMines' in cell)
+        return (
+            cell.isClicked &&
+            (cell.neighbourMines === 0 || !('neighbourMines' in cell))
         );
-    }
+    };
 
     useEffect(() => {
         if (isRunTimer) {
@@ -56,34 +58,64 @@ const Board = () => {
             setMiliSeconds(msecs);
             setSeconds(0);
             const tId = setInterval(() => {
-                setMiliSeconds(++msecs);
+                setMiliSeconds((msecs += 1));
                 if (Math.floor(msecs / 100) > prevSec) {
-                    setSeconds(++prevSec);
+                    setSeconds((prevSec += 1));
                 }
-            }, 10)
+            }, 10);
             setTimerId(tId);
         } else {
             clearInterval(timerId);
         }
-    }, [isRunTimer])
+    }, [isRunTimer]);
 
     useEffect(() => {
-        const { sizeX, sizeY, minesCount } = Object.values(LEVEL_SETTINGS)[0];
-        setSizeX(sizeX);
-        setSizeY(sizeY);
-        setMinesCount(minesCount);
-        setMinesLeft(minesCount);
-        setLevel(Object.keys(LEVEL_SETTINGS)[0])
-    }, [])
+        const {
+            sizeX: lvlSizeX,
+            sizeY: lvlSizeY,
+            minesCount: lvlMinesCount,
+        } = Object.values(LEVEL_SETTINGS)[0];
+        setSizeX(lvlSizeX);
+        setSizeY(lvlSizeY);
+        setMinesCount(lvlMinesCount);
+        setMinesLeft(lvlMinesCount);
+        setLevel(Object.keys(LEVEL_SETTINGS)[0]);
+    }, []);
 
-    const toggleShowModal = () => setIsShownModal(!isShownModal)
-    const toggleHighScores = () => setIsShownHighScores(!isShownHighScores)
-
+    const toggleShowModal = () => setIsShownModal(!isShownModal);
+    const toggleHighScores = () => setIsShownHighScores(!isShownHighScores);
     const minesOnNeighbours = (x, y) => minesBoard[x][y].neighbourMines || 0;
+    const isArrayInArray = (arrContainer, arrItem) =>
+        JSON.stringify(arrContainer).includes(JSON.stringify(arrItem));
 
-    const isArrayInArray = (arrContainer, arrItem) => JSON.stringify(arrContainer).includes(JSON.stringify(arrItem))
+    const getFieldsNeighbours = (x, y) =>
+        [
+            [x - 1, y - 1],
+            [x - 1, y],
+            [x - 1, y + 1],
+            [x, y - 1],
+            [x, y + 1],
+            [x + 1, y - 1],
+            [x + 1, y],
+            [x + 1, y + 1],
+        ].filter(([x1, y1]) => isFieldInBoard(x1, y1));
+
+    const floodFill = (x, y) => {
+        const board = [...minesBoard];
+        board[x][y].isClicked = true;
+        setMinesBoard(board);
+        if (board[x][y].neighbourMines !== 0) {
+            return;
+        }
+        const toFill = getFieldsNeighbours(x, y).filter(
+            ([x1, y1]) =>
+                !isMine(x1, y1) && !isClicked(x1, y1) && !isFlagged(x1, y1)
+        );
+        toFill.forEach(([x1, y1]) => floodFill(x1, y1));
+    };
 
     const generateMines = (newMinesBoard, clickedX, clickedY) => {
+        const minedBoard = [...newMinesBoard];
         let i = minesCount;
         let security = 150;
         const fieldsNeighbours = getFieldsNeighbours(clickedX, clickedY);
@@ -92,48 +124,58 @@ const Board = () => {
             const randX = Math.floor(Math.random() * sizeX);
             const randY = Math.floor(Math.random() * sizeY);
 
-            if (!newMinesBoard[randX][randY].isMine
-                && (randX !== clickedX && randY !== clickedY)
-                && (!isArrayInArray(fieldsNeighbours, [randX, randY]))
+            if (
+                !minedBoard[randX][randY].isMine &&
+                randX !== clickedX &&
+                randY !== clickedY &&
+                !isArrayInArray(fieldsNeighbours, [randX, randY])
             ) {
-                newMinesBoard[randX][randY].isMine = true;
-                i--;
+                minedBoard[randX][randY].isMine = true;
+                i -= 1;
             }
             security -= 1;
             if (security === 0) {
-                throw Error("SECURYTY!!!");
+                throw Error('Problems with pseudo-random number generator!');
             }
         } while (i > 0);
-        return newMinesBoard;
+        return minedBoard;
     };
 
-    const calculateNeighbourMines = (newMinesBoard) => {
+    const calculateNeighbourMines = (minesBoardToCalculate) => {
+        const resultBoard = [...minesBoardToCalculate];
         for (let x = 0; x < sizeX; x++) {
             for (let y = 0; y < sizeY; y++) {
                 let countNeighbourMines = 0;
-                if (!newMinesBoard[x][y].isMine) {
+                if (!resultBoard[x][y].isMine) {
                     for (let checkY = y - 1; checkY < y + 2; checkY++) {
                         for (let checkX = x - 1; checkX < x + 2; checkX++) {
                             if (
                                 isFieldInBoard(checkX, checkY) &&
                                 (checkX !== x || checkY !== y) &&
-                                newMinesBoard[checkX][checkY].isMine
+                                resultBoard[checkX][checkY].isMine
                             ) {
-                                countNeighbourMines++;
+                                countNeighbourMines += 1;
                             }
                         }
                     }
                 }
-                newMinesBoard[x][y].neighbourMines = countNeighbourMines;
+                resultBoard[x][y].neighbourMines = countNeighbourMines;
             }
         }
-        return newMinesBoard;
+        return resultBoard;
     };
 
     const genericBoardCreation = () =>
         Array.from({ length: +sizeX }, (_, x) =>
+            // eslint-disable-next-line no-shadow
             Array.from({ length: +sizeY }, (_, y) => ({ x, y }))
         );
+
+    const createMinesBoard = () => {
+        const newMinesBoard = genericBoardCreation();
+        setMinesBoard(newMinesBoard);
+        setIsGameOver(false);
+    };
 
     const startNewGame = (doSetMinesLeft) => {
         setSeconds(0);
@@ -145,19 +187,13 @@ const Board = () => {
         }
         createMinesBoard();
         setIsRunTimer(false);
-    }
-
-    const createMinesBoard = () => {
-        let newMinesBoard = genericBoardCreation();
-        setMinesBoard(newMinesBoard);
-        setIsGameOver(false);
     };
 
     const countMinesCountRange = () => {
         const minRange = Math.max(sizeX, sizeY);
         const maxRange = (sizeX - 1) * (sizeY - 1);
-        setMinesCountRange([1, maxRange]);
-    }
+        setMinesCountRange([minRange, maxRange]);
+    };
 
     useEffect(() => {
         createMinesBoard();
@@ -165,8 +201,8 @@ const Board = () => {
     }, [sizeX, sizeY]);
 
     useEffect(() => {
-        createMinesBoard()
-    }, [minesCount])
+        createMinesBoard();
+    }, [minesCount]);
 
     useEffect(() => {
         if (!isGameOver) {
@@ -174,45 +210,33 @@ const Board = () => {
         }
 
         const board = [...minesBoard];
-        board.forEach(column => column.forEach(cell => {
-            if (cell.isMine) {
-                cell.isClicked = true;
-            }
-            if (cell.isFlagged && !cell.isMine) {
-                cell.isWrongFlagged = true;
-            }
-        }))
+        board.forEach((column) =>
+            column.forEach((cell) => {
+                if (cell.isMine) {
+                    cell.isClicked = true;
+                }
+                if (cell.isFlagged && !cell.isMine) {
+                    cell.isWrongFlagged = true;
+                }
+            })
+        );
         setMinesBoard(board);
-    }, [isGameOver])
-
-    const getFieldsNeighbours = (x, y) => [
-        [x - 1, y - 1],
-        [x - 1, y],
-        [x - 1, y + 1],
-        [x, y - 1],
-        [x, y + 1],
-        [x + 1, y - 1],
-        [x + 1, y],
-        [x + 1, y + 1],
-    ].filter(([x, y]) => isFieldInBoard(x, y));
-
-    const floodFill = (x, y) => {
-        const board = [...minesBoard];
-        board[x][y].isClicked = true;
-        setMinesBoard(board);
-        if (board[x][y].neighbourMines !== 0) {
-            return;
-        }
-        const toFill = getFieldsNeighbours(x, y)
-            .filter(([x, y]) => !isMine(x, y) && !isClicked(x, y) && !isFlagged(x, y))
-        toFill.forEach(([x, y]) => floodFill(x, y))
-    }
+    }, [isGameOver]);
 
     const gameOver = () => {
         setIsGameOver(true);
         setIsGameRun(false);
         setIsRunTimer(false);
-    }
+    };
+
+    const setAllMinesFlagged = () => {
+        const board = [...minesBoard].map((column) =>
+            column.map((cell) =>
+                cell.isMine ? { ...cell, isFlagged: true } : { ...cell }
+            )
+        );
+        setMinesBoard(board);
+    };
 
     const doGameWon = () => {
         setMinesLeft(0);
@@ -220,13 +244,7 @@ const Board = () => {
         setAllMinesFlagged();
         setIsRunTimer(false);
         toggleShowModal();
-    }
-
-    const setAllMinesFlagged = () => {
-        const board = [...minesBoard].map(column => column.map(cell => cell.isMine ?
-            { ...cell, isFlagged: true } : { ...cell }))
-        setMinesBoard(board);
-    }
+    };
 
     const leftClickOnClicked = (x, y) => {
         if (isEmpty(x, y)) {
@@ -235,39 +253,57 @@ const Board = () => {
 
         const fieldsNeighbours = getFieldsNeighbours(x, y);
 
-        const flagsOnNeighbours = fieldsNeighbours
-            .filter(([x, y]) => isFlagged(x, y)).length;
+        const flagsOnNeighbours = fieldsNeighbours.filter(([x1, y1]) =>
+            isFlagged(x1, y1)
+        ).length;
 
         if (!flagsOnNeighbours || flagsOnNeighbours < minesOnNeighbours(x, y)) {
             return;
         }
 
-        const wellFlaggedNeighbours = getFieldsNeighbours(x, y)
-            .filter(([x, y]) => isMine(x, y) && isFlagged(x, y))
-            .length;
+        const wellFlaggedNeighbours = getFieldsNeighbours(x, y).filter(
+            ([x1, y1]) => isMine(x1, y1) && isFlagged(x1, y1)
+        ).length;
 
         if (wellFlaggedNeighbours === minesOnNeighbours(x, y)) {
             fieldsNeighbours
-                .filter(([x, y]) => !isClicked(x, y) && !isFlagged(x, y))
-                .forEach(([x, y]) => floodFill(x, y));
+                .filter(([x1, y1]) => !isClicked(x1, y1) && !isFlagged(x1, y1))
+                .forEach(([x1, y1]) => floodFill(x1, y1));
         } else {
             gameOver();
         }
-    }
+    };
+
+    const checkIsWon = () => {
+        const notRevealed = minesBoard.reduce(
+            (sum, column) =>
+                column.filter((cell) => !cell.isClicked).length + sum,
+            0
+        );
+
+        if (notRevealed === minesCount) {
+            doGameWon();
+        }
+    };
 
     const leftClickOnField = (x, y) => {
         const board = [...minesBoard];
-        const { isMine, isClicked, isFlagged } = board[x][y];
+        console.log('🚀 ~ leftClickOnField ~ board', board);
+        const {
+            isMine: fieldIsMine,
+            isClicked: fieldIsClicked,
+            isFlagged: fieldIsFlagged,
+        } = board[x][y];
 
-        if (isFlagged) {
+        if (fieldIsFlagged) {
             return;
         }
 
-        if (isClicked) {
+        if (fieldIsClicked) {
             leftClickOnClicked(x, y);
         }
 
-        if (isMine) {
+        if (fieldIsMine) {
             gameOver();
             return;
         }
@@ -276,17 +312,30 @@ const Board = () => {
         setMinesBoard(board);
         floodFill(x, y);
         checkIsWon();
-    }
+    };
 
-    const checkIsWon = () => {
-        const notRevealed = minesBoard.reduce((sum, column) =>
-            column.filter(cell => (!cell.isClicked)).length + sum
-            , 0)
-
-        if (notRevealed === minesCount) {
-            doGameWon();
+    const rightClickOnField = (x, y) => {
+        const board = [...minesBoard];
+        if (board[x][y].isClicked) {
+            return;
         }
-    }
+        setMinesLeft(minesLeft + (board[x][y].isFlagged ? 1 : -1));
+        board[x][y].isFlagged = !board[x][y].isFlagged;
+        setMinesBoard(board);
+    };
+
+    const createBoardAndMines = (x, y) => {
+        let board = [...minesBoard];
+        board = generateMines(board, x, y);
+        board = calculateNeighbourMines(board);
+        setMinesBoard(board);
+    };
+
+    const runGame = (x, y) => {
+        createBoardAndMines(x, y);
+        setIsRunTimer(true);
+        setIsGameRun(true);
+    };
 
     const handleMouseUp = (e, cell) => {
         if (isGameOver) {
@@ -302,81 +351,62 @@ const Board = () => {
         } else if (e.button === 2) {
             rightClickOnField(x, y);
         }
-    }
+    };
 
-    const rightClickOnField = (x, y) => {
-        const board = [...minesBoard];
-        if (board[x][y].isClicked) {
-            return;
-        }
-        setMinesLeft(minesLeft + (board[x][y].isFlagged ? 1 : -1));
-        board[x][y].isFlagged = !board[x][y].isFlagged;
-        setMinesBoard(board);
-    }
-
-    const handleContextMenu = e => {
+    const handleContextMenu = (e) => {
         e.preventDefault();
-    }
-
-    const createBoardAndMines = (x, y) => {
-        let board = [...minesBoard];
-        board = generateMines(board, x, y);
-        board = calculateNeighbourMines(board);
-        setMinesBoard(board);
-    }
-
-    const runGame = (x, y) => {
-        createBoardAndMines(x, y);
-        setIsRunTimer(true);
-        setIsGameRun(true);
-    }
+    };
 
     const showHighScores = () => {
-        console.log('show HiSco');
         setIsShownHighScores(true);
-    }
+    };
 
     const handleLevelSelect = (e, x, y, m) => {
-        let sizeX;
-        let sizeY;
-        let minesCount;
+        let selectedSizeX;
+        let selectedSizeY;
+        let selectedMinesCount;
         if (e) {
             const levelName = e.target.id;
 
-            if (!levelName in LEVEL_SETTINGS) {
-                throw new Error('Invalid level name')
+            if (!(levelName in LEVEL_SETTINGS)) {
+                throw new Error('Invalid level name');
             }
             setLevel(levelName);
 
-            ({ sizeX, sizeY, minesCount } = LEVEL_SETTINGS[levelName]);
+            ({
+                sizeX: selectedSizeX,
+                sizeY: selectedSizeY,
+                minesCount: selectedMinesCount,
+            } = LEVEL_SETTINGS[levelName]);
         } else {
-            setLevel('custom')
-            sizeX = x;
-            sizeY = y;
-            minesCount = m;
+            setLevel('custom');
+            selectedSizeX = x;
+            selectedSizeY = y;
+            selectedMinesCount = m;
         }
-        setSizeX(sizeX);
-        setSizeY(sizeY);
-        setMinesCount(minesCount);
-        setMinesLeft(minesCount);
+        setSizeX(selectedSizeX);
+        setSizeY(selectedSizeY);
+        setMinesCount(selectedMinesCount);
+        setMinesLeft(selectedMinesCount);
         startNewGame(false);
-    }
+    };
 
-    const boardBody = minesBoard.map((column, index) =>
-        <div className='column' key={index}>{column.map((cell) =>
-            <Cell
-                cellstate={cell}
-                onMouseUp={(e) => handleMouseUp(e, cell)}
-                onContextMenu={handleContextMenu}
-                key={`${cell.x}x${cell.y}`}
-            />
-        )}
+    const boardBody = minesBoard.map((column) => (
+        <div className="column" key={`${column[0].x}${column[0].y}`}>
+            {column.map((cell) => (
+                <Cell
+                    cellstate={cell}
+                    onMouseUp={(e) => handleMouseUp(e, cell)}
+                    onContextMenu={handleContextMenu}
+                    key={`${cell.x}x${cell.y}`}
+                />
+            ))}
         </div>
-    );
+    ));
 
     return (
         <>
-            <div className='controls'>
+            <div className="controls">
                 <Controls
                     minesCountRange={minesCountRange}
                     minesCount={minesCount}
@@ -391,24 +421,20 @@ const Board = () => {
                     sizeY={sizeY}
                 />
             </div>
-            <div className='board'>
-                {boardBody}
-            </div>
+            <div className="board">{boardBody}</div>
 
-            {
-                isShownModal &&
+            {isShownModal && (
                 <Modal onClose={toggleShowModal} title="High Scores">
                     <HighScores score={miliSeconds} level={level} />
                 </Modal>
-            }
-            {
-                isShownHighScores &&
+            )}
+            {isShownHighScores && (
                 <Modal onClose={toggleHighScores} title="High Scores">
-                    <HighScores display='true' />
+                    <HighScores display="true" />
                 </Modal>
-            }
+            )}
         </>
     );
-};
+}
 
 export default Board;
