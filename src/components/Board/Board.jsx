@@ -53,7 +53,7 @@ function Board() {
 
     useEffect(() => {
         if (isRunTimer) {
-            setGameStartTime(Date.now())
+            setGameStartTime(Date.now());
             setCurrentScore(0);
         } else {
             const gameEndTime = Date.now();
@@ -134,33 +134,27 @@ function Board() {
     };
 
     const calculateNeighbourMines = (minesBoardToCalculate) => {
-        const resultBoard = [...minesBoardToCalculate];
-        for (let x = 0; x < sizeX; x++) {
-            for (let y = 0; y < sizeY; y++) {
-                let countNeighbourMines = 0;
-                if (!resultBoard[x][y].isMine) {
-                    for (let checkY = y - 1; checkY < y + 2; checkY++) {
-                        for (let checkX = x - 1; checkX < x + 2; checkX++) {
-                            if (
-                                isFieldInBoard(checkX, checkY) &&
-                                (checkX !== x || checkY !== y) &&
-                                resultBoard[checkX][checkY].isMine
-                            ) {
-                                countNeighbourMines += 1;
-                            }
-                        }
+        const resultBoard = [...minesBoardToCalculate].map(
+            (column, x, inputArray) =>
+                column.map((cell, y) => {
+                    if (!cell.isMine) {
+                        const neighbours = getFieldsNeighbours(x, y);
+                        cell.neighbourMines = neighbours.reduce(
+                            (sum, [x1, y1]) =>
+                                inputArray[x1][y1].isMine ? sum + 1 : sum,
+                            0
+                        );
                     }
-                }
-                resultBoard[x][y].neighbourMines = countNeighbourMines;
-            }
-        }
+                    return cell;
+                })
+        );
+
         return resultBoard;
     };
 
     const genericBoardCreation = () =>
         Array.from({ length: +sizeX }, (_, x) =>
-            // eslint-disable-next-line no-shadow
-            Array.from({ length: +sizeY }, (_, y) => ({ x, y }))
+            Array.from({ length: +sizeY }, (__, y) => ({ x, y }))
         );
 
     const createMinesBoard = () => {
@@ -200,14 +194,15 @@ function Board() {
         }
 
         const board = [...minesBoard];
-        board.forEach((column) =>
-            column.forEach((cell) => {
+        board.map((column) =>
+            column.map((cell) => {
                 if (cell.isMine) {
                     cell.isClicked = true;
                 }
                 if (cell.isFlagged && !cell.isMine) {
                     cell.isWrongFlagged = true;
                 }
+                return cell;
             })
         );
         setMinesBoard(board);
@@ -414,7 +409,7 @@ function Board() {
 
             {isShownModal && (
                 <Modal onClose={toggleShowModal} title="High Scores">
-                    <HighScores level={level} score={currentScore}/>
+                    <HighScores level={level} score={currentScore} />
                 </Modal>
             )}
             {isShownHighScores && (

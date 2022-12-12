@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-filename-extension */
 import React, { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
