@@ -10,7 +10,7 @@ function HighScores(props) {
     const [userName, setUserName] = useState('');
     const MAX_SCORE_SIZE = 10;
     const saveHighScore = level !== 'custom';
-    const miliSecsToSecs = (ms) => ms / 100;
+    const miliSecsToSecs = (ms) => (Math.round(ms / 10) / 100).toFixed(2);
 
     const levelsHighScore = (thisLevel) => highScores[thisLevel] || [];
 

@@ -31,15 +31,14 @@ function Board() {
     const [isShownHighScores, setIsShownHighScores] = useState(false);
     const [isShownModal, setIsShownModal] = useState(false);
     const [level, setLevel] = useState('');
-    const [miliSeconds, setMiliSeconds] = useState(0);
     const [minesBoard, setMinesBoard] = useState([]);
     const [minesCount, setMinesCount] = useState(0);
     const [minesCountRange, setMinesCountRange] = useState([]);
     const [minesLeft, setMinesLeft] = useState(0);
-    const [seconds, setSeconds] = useState(0);
     const [sizeX, setSizeX] = useState(0);
     const [sizeY, setSizeY] = useState(0);
-    const [timerId, setTimerId] = useState(null);
+    const [currentScore, setCurrentScore] = useState(null);
+    const [gameStartTime, setGameStartTime] = useState(null);
     const isFieldInBoard = (x, y) => x >= 0 && x < sizeX && y >= 0 && y < sizeY;
     const isMine = (x, y) => minesBoard[x][y].isMine;
     const isFlagged = (x, y) => minesBoard[x][y].isFlagged || false;
@@ -54,19 +53,11 @@ function Board() {
 
     useEffect(() => {
         if (isRunTimer) {
-            let msecs = 0;
-            let prevSec = 0;
-            setMiliSeconds(msecs);
-            setSeconds(0);
-            const tId = setInterval(() => {
-                setMiliSeconds((msecs += 1));
-                if (Math.floor(msecs / 100) > prevSec) {
-                    setSeconds((prevSec += 1));
-                }
-            }, 10);
-            setTimerId(tId);
+            setGameStartTime(Date.now())
+            setCurrentScore(0);
         } else {
-            clearInterval(timerId);
+            const gameEndTime = Date.now();
+            setCurrentScore(gameEndTime - gameStartTime);
         }
     }, [isRunTimer]);
 
@@ -179,8 +170,6 @@ function Board() {
     };
 
     const startNewGame = (doSetMinesLeft) => {
-        setSeconds(0);
-        setMiliSeconds(0);
         setIsGameRun(false);
         setAreControlsDisabled(false);
         if (doSetMinesLeft) {
@@ -414,18 +403,18 @@ function Board() {
                     onStartGame={() => startNewGame(true)}
                     onShowHighScores={showHighScores}
                     areControlsDisabled={areControlsDisabled}
-                    seconds={seconds}
                     onLevelSelect={handleLevelSelect}
                     level={level}
                     sizeX={sizeX}
                     sizeY={sizeY}
+                    isRunTimer={isRunTimer}
                 />
             </div>
             <div className="board">{boardBody}</div>
 
             {isShownModal && (
                 <Modal onClose={toggleShowModal} title="High Scores">
-                    <HighScores score={miliSeconds} level={level} />
+                    <HighScores level={level} score={currentScore}/>
                 </Modal>
             )}
             {isShownHighScores && (

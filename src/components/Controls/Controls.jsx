@@ -1,5 +1,6 @@
 import React, { createRef, useEffect, useState } from 'react';
 import Button from '../../layout-components/Button/Button';
+import Timer from '../Timer/Timer';
 import './Controls.css';
 import DropDownButton from '../../layout-components/DropDownButton/DropDownButton';
 
@@ -14,7 +15,7 @@ function Controls(props) {
         onLevelSelect,
         onShowHighScores,
         minesLeft,
-        seconds
+        isRunTimer
     } = props;
     const minSize = 5;
     const maxSize = 30;
@@ -157,13 +158,7 @@ function Controls(props) {
             </div>
             <div>
                 Timer
-                <input
-                    type="text"
-                    disabled
-                    id="timer"
-                    name="timer"
-                    value={seconds}
-                />
+                <Timer isRunTimer={isRunTimer} />
             </div>
             <div>
                 <Button type="button" id="startNewGame" onclick={onStartGame}>
