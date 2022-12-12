@@ -26,7 +26,8 @@ class DropDownButton extends Component {
     };
 
     render() {
-      const {isActive, label, children, isOpen} = this.props;
+      const {isActive, label, children} = this.props;
+      const {isOpen} = this.state;
         return (
             <div className="dropdown">
                 <Button
