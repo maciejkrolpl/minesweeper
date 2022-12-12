@@ -1,7 +1,6 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
 import './Modal.css';
-import Button from './Button';
+import Button from '../Button/Button';
 
 function Modal(props) {
     const { onClose, children, title } = props;

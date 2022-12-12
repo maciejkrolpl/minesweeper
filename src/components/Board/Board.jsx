@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import Cell from './Cell';
-import Controls from './Controls';
-import Modal from './Modal';
-import HighScores from './HighScores';
+import Cell from '../Cell/Cell';
+import Controls from '../Controls/Controls';
+import HighScores from '../HighScores/HighScores';
+import Modal from '../../layout-components/Modal/Modal';
+import './Board.css';
 
 function Board() {
     const LEVEL_SETTINGS = {
@@ -288,7 +289,6 @@ function Board() {
 
     const leftClickOnField = (x, y) => {
         const board = [...minesBoard];
-        console.log('🚀 ~ leftClickOnField ~ board', board);
         const {
             isMine: fieldIsMine,
             isClicked: fieldIsClicked,

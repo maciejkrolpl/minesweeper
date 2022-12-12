@@ -1,7 +1,6 @@
-/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import useLocalStorage from '../utils/useLocalStorage';
-import Button from './Button';
+import useLocalStorage from '../../utils/useLocalStorage';
+import Button from '../../layout-components/Button/Button';
 import './HighScores.css';
 
 function HighScores(props) {

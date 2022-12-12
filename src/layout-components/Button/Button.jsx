@@ -1,18 +1,19 @@
 import React from 'react';
-import './Button.css'
+import './Button.css';
 
-const Button = props => {
+function Button(props) {
     const { onclick, children, isActive, id, className } = props;
 
     return (
-        <button type="button"
+        <button
+            type="button"
             className={isActive ? `${className} active` : className}
             onClick={onclick}
             id={id}
         >
             {children}
         </button>
-    )
+    );
 }
 
 export default Button;

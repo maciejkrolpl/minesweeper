@@ -1,8 +1,7 @@
-/* eslint-disable react/prop-types */
 import React, { createRef, useEffect, useState } from 'react';
-import Button from './Button';
+import Button from '../../layout-components/Button/Button';
 import './Controls.css';
-import DropDownButton from './DropDownButton';
+import DropDownButton from '../../layout-components/DropDownButton/DropDownButton';
 
 function Controls(props) {
     const {
@@ -14,6 +13,8 @@ function Controls(props) {
         level,
         onLevelSelect,
         onShowHighScores,
+        minesLeft,
+        seconds
     } = props;
     const minSize = 5;
     const maxSize = 30;
@@ -146,23 +147,23 @@ function Controls(props) {
             </div>
             <div>
                 Mines Left
-                {/* <input
+                <input
                     type="text"
                     disabled
                     id="minesLeft"
                     name="minesLeft"
                     value={minesLeft}
-                /> */}
+                />
             </div>
             <div>
                 Timer
-                {/* <input
+                <input
                     type="text"
                     disabled
                     id="timer"
                     name="timer"
                     value={seconds}
-                /> */}
+                />
             </div>
             <div>
                 <Button type="button" id="startNewGame" onclick={onStartGame}>
