@@ -4,6 +4,7 @@ import Controls from '../Controls/Controls';
 import HighScores from '../HighScores/HighScores';
 import Modal from '../../layout-components/Modal/Modal';
 import './Board.css';
+// import moveIcon from '../../assets/move.svg';
 
 function Board() {
     const LEVEL_SETTINGS = {
@@ -388,6 +389,25 @@ function Board() {
         </div>
     ));
 
+    
+    const drag = e => {
+        const nX = e.clientX;
+        const nY = e.clientY;
+        const div = document.getElementsByClassName('board-container')[0];
+        div.style.top = `${nY}px`
+        div.style.left = `${nX}px`
+    }
+
+    const mouseDown = e => {
+        e.preventDefault();
+        document.onmousemove = drag;
+    }
+
+    const mouseUp = () => {
+        document.onmousemove = null;
+    }
+
+
     return (
         <>
             <div className="controls">
@@ -405,7 +425,11 @@ function Board() {
                     isRunTimer={isRunTimer}
                 />
             </div>
-            <div className="board">{boardBody}</div>
+            <div className="board-container" >
+                {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+                <div className="draggable-bar" onMouseDown={mouseDown} onMouseUp={mouseUp}> </div>
+                <div className="board">{boardBody}</div>
+            </div>
 
             {isShownModal && (
                 <Modal onClose={toggleShowModal} title="High Scores">

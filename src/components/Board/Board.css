@@ -1,3 +1,24 @@
 .board {
   display: flex;
 }
+
+.draggable-bar {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid;
+  background-color: #999;
+  border: 1px solid black;
+  margin-right: 0.25rem;
+  background-image: url('../../assets/move.svg');
+  background-repeat: no-repeat;
+
+}
+
+.board-container {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: center;
+  width: fit-content;
+}
