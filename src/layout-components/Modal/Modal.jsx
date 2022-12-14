@@ -1,38 +1,35 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './Modal.css';
 import Button from '../Button/Button';
 
 function Modal(props) {
     const { onClose, children, title } = props;
 
-    const closeButtonRef = React.useRef(null);
-
-    const setFocus = () => {
-        if (closeButtonRef && closeButtonRef.current) {
-            closeButtonRef.current.focus();
-        }
-    };
-
-    useEffect(() => {
-        document.addEventListener('setFocus', setFocus);
-    }, []);
-
     return (
-        <div className="background">
-            <div className="modal" id="modal">
-                <h2>{title}</h2>
-                <div className="content">{children}</div>
-                <div className="actions">
-                    <Button
-                        onclick={onClose}
-                        id="button-close"
-                        ref={closeButtonRef}
-                    >
-                        close
-                    </Button>
+        <>
+        <div
+            className="modal"
+            tabIndex="-1"
+            role="dialog"
+            aria-labelledby="myModalLabel"
+            aria-hidden="true"
+        >
+            <div className="modal-dialog">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h2>{title}</h2>
+                    </div>
+                    <div className="modal-body">
+                        {children}
+                        </div>
+                    <div className="modal-footer">
+                        <Button onclick={onClose}>close</Button>
+                    </div>
                 </div>
             </div>
         </div>
+        <div className='background'/>
+        </>
     );
 }
 
