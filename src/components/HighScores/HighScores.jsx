@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import useLocalStorage from '../../utils/useLocalStorage';
 import Button from '../../layout-components/Button/Button';
 import './HighScores.css';
 
 function HighScores(props) {
     const { score, level, display } = props;
+    const inputRef = useRef(null);
+    
+    useEffect(()=> {
+       inputRef.current.focus();
+    },[])
 
     const [highScores, setHighScores] = useLocalStorage('highscores', {});
     const [userName, setUserName] = useState('');
-    const MAX_SCORE_SIZE = 10;
     const saveHighScore = level !== 'custom';
     const miliSecsToSecs = (ms) => (Math.round(ms / 10) / 100).toFixed(2);
 
@@ -23,25 +27,27 @@ function HighScores(props) {
         elem.style.display = 'none';
     };
 
-    const saveScore = () => {
+    const saveScore = (e) => {
+        e.preventDefault();
         const timeStamp = Date.now();
         const scoresList = [
             ...levelsHighScore(level),
             { score, userName, timeStamp },
         ].sort((a, b) => a.score - b.score);
-        if (scoresList.length > MAX_SCORE_SIZE) {
-            scoresList.length = MAX_SCORE_SIZE;
-        }
         const scoreToSave = {
             ...highScores,
             [level]: scoresList,
         };
         setHighScores(scoreToSave);
         hideForm();
+        const event = new CustomEvent('setFocus', {
+            detail: { button: 'close' },
+        });
+        document.dispatchEvent(event);
     };
 
     const displayHighScores = (thisLevel) =>
-        (levelsHighScore(thisLevel) || [])
+        levelsHighScore(thisLevel)
             .sort((a, b) => a.score - b.score)
             .map((thisScore) => (
                 <div key={thisScore.timeStamp}>
@@ -50,14 +56,6 @@ function HighScores(props) {
                     {new Date(thisScore.timeStamp).toLocaleString()}
                 </div>
             ));
-
-    const isScoreInRange = (thisLevel) => {
-        const onlyTimes = (levelsHighScore(thisLevel) || []).map(
-            (thisScore) => thisScore.score
-        );
-        const maxTime = Math.max(...onlyTimes);
-        return onlyTimes.length < MAX_SCORE_SIZE || score < maxTime;
-    };
 
     if (display) {
         return (
@@ -77,20 +75,23 @@ function HighScores(props) {
             <p>Your score is {miliSecsToSecs(score)} seconds.</p>
             {saveHighScore && (
                 <>
-                    {isScoreInRange(level) && (
-                        <div id="form">
-                            Enter your name:
-                            <br />
+                    <div id="form">
+                        Enter your name:
+                        <br />
+                        <form>
                             <input
                                 type="text"
                                 name="userName"
                                 id="userName"
                                 value={userName}
                                 onChange={changeUserName}
+                                ref={inputRef}
                             />
-                            <Button onclick={saveScore}>Save</Button>
-                        </div>
-                    )}
+                            <Button type="button" onclick={saveScore}>
+                                Save
+                            </Button>
+                        </form>
+                    </div>
                     <div>{displayHighScores(level)}</div>
                 </>
             )}
