@@ -4,14 +4,13 @@ import Controls from '../Controls/Controls';
 import HighScores from '../HighScores/HighScores';
 import Modal from '../../layout-components/Modal/Modal';
 import './Board.css';
-// import moveIcon from '../../assets/move.svg';
 
 function Board() {
     const LEVEL_SETTINGS = {
         beginner: {
             sizeX: 8,
             sizeY: 8,
-            minesCount: 2,
+            minesCount: 1,
         },
         intermediate: {
             sizeX: 16,
@@ -76,6 +75,10 @@ function Board() {
     }, []);
 
     const toggleShowModal = () => setIsShownModal(!isShownModal);
+    const onCloseModal = () => {
+        setCurrentScore(0);
+        toggleShowModal();
+    };
     const toggleHighScores = () => setIsShownHighScores(!isShownHighScores);
     const minesOnNeighbours = (x, y) => minesBoard[x][y].neighbourMines || 0;
     const isArrayInArray = (arrContainer, arrItem) =>
@@ -279,6 +282,12 @@ function Board() {
             isClicked: fieldIsClicked,
             isFlagged: fieldIsFlagged,
         } = board[x][y];
+        
+        // eslint-disable-next-line no-debugger
+        debugger;
+        if (isGameOver || !isGameRun) {
+            return;
+        }
 
         if (fieldIsFlagged) {
             return;
