@@ -389,24 +389,22 @@ function Board() {
         </div>
     ));
 
-    
-    const drag = e => {
+    const drag = (e) => {
         const nX = e.clientX;
         const nY = e.clientY;
         const div = document.getElementsByClassName('board-container')[0];
-        div.style.top = `${nY}px`
-        div.style.left = `${nX}px`
-    }
+        div.style.top = `${nY}px`;
+        div.style.left = `${nX}px`;
+    };
 
-    const mouseDown = e => {
+    const mouseDown = (e) => {
         e.preventDefault();
         document.onmousemove = drag;
-    }
+    };
 
     const mouseUp = () => {
         document.onmousemove = null;
-    }
-
+    };
 
     return (
         <>
@@ -425,9 +423,15 @@ function Board() {
                     isRunTimer={isRunTimer}
                 />
             </div>
-            <div className="board-container" >
+            <div className="board-container">
                 {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-                <div className="draggable-bar" onMouseDown={mouseDown} onMouseUp={mouseUp}> </div>
+                <div
+                    className="draggable-bar"
+                    onMouseDown={mouseDown}
+                    onMouseUp={mouseUp}
+                >
+                    {' '}
+                </div>
                 <div className="board">{boardBody}</div>
             </div>
 
