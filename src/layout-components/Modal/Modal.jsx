@@ -3,7 +3,7 @@ import './Modal.css';
 import Button from '../Button/Button';
 
 function Modal(props) {
-    const { onClose, children, title } = props;
+    const { onClose, children, title, width: {value, unit}} = props;
 
     return (
         <>
