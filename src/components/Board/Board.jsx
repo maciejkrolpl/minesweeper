@@ -10,7 +10,7 @@ function Board() {
         beginner: {
             sizeX: 8,
             sizeY: 8,
-            minesCount: 2,
+            minesCount: 10,
         },
         intermediate: {
             sizeX: 16,
@@ -108,7 +108,6 @@ function Board() {
     };
 
     const generateMines = (newMinesBoard, clickedX, clickedY) => {
-        console.log('genrate mines')
         const minedBoard = [...newMinesBoard];
         let i = minesCount;
         let security = 150;
