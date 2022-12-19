@@ -283,8 +283,6 @@ function Board() {
             isFlagged: fieldIsFlagged,
         } = board[x][y];
         
-        // eslint-disable-next-line no-debugger
-        debugger;
         if (isGameOver || !isGameRun) {
             return;
         }
