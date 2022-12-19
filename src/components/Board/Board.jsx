@@ -10,7 +10,7 @@ function Board() {
         beginner: {
             sizeX: 8,
             sizeY: 8,
-            minesCount: 1,
+            minesCount: 10,
         },
         intermediate: {
             sizeX: 16,
