@@ -406,6 +406,31 @@ function Board() {
         document.onmousemove = null;
     };
 
+    let renderModal = null;
+
+    if (isShownModal) {
+        const width = {
+            value: '550',
+            unit: 'pixels',
+        };
+        renderModal = (
+            <Modal onClose={toggleShowModal} title="High Scores" width={width}>
+                <HighScores level={level} score={currentScore} />
+            </Modal>
+        );
+    }
+
+    if (isShownHighScores) {
+        const width = {
+            value: '60',
+            unit: 'percent',
+        };
+        renderModal = (
+            <Modal onClose={toggleHighScores} title="High Scores" width={width}>
+                <HighScores display="true" />
+            </Modal>
+        );
+    }
     return (
         <>
             <div className="controls">
@@ -435,16 +460,7 @@ function Board() {
                 <div className="board">{boardBody}</div>
             </div>
 
-            {isShownModal && (
-                <Modal onClose={toggleShowModal} title="High Scores">
-                    <HighScores level={level} score={currentScore} />
-                </Modal>
-            )}
-            {isShownHighScores && (
-                <Modal onClose={toggleHighScores} title="High Scores">
-                    <HighScores display="true" />
-                </Modal>
-            )}
+            {renderModal}
         </>
     );
 }

@@ -12,10 +12,8 @@
 
 .modal {
     display: block;
-    position: absolute;
-    width: 60vw;
-    left: 20vw;
-    top: 10vh;
+    position: relative;
+    margin:auto;
     border: 1px solid black;
     border-radius: 4px;
     z-index: 1001;
@@ -40,4 +38,8 @@
     height: 50vh;
     overflow-y: auto;
     margin: 0.3rem;
+}
+
+h2 {
+    margin: 0;
 }
