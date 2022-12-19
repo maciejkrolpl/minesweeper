@@ -10,7 +10,7 @@ function Board() {
         beginner: {
             sizeX: 8,
             sizeY: 8,
-            minesCount: 10,
+            minesCount: 2,
         },
         intermediate: {
             sizeX: 16,
@@ -27,6 +27,7 @@ function Board() {
     const [areControlsDisabled, setAreControlsDisabled] = useState(false);
     const [isGameOver, setIsGameOver] = useState(false);
     const [isGameRun, setIsGameRun] = useState(false);
+    const [isGameWon, setIsGameWon] = useState(false);
     const [isRunTimer, setIsRunTimer] = useState(false);
     const [isShownHighScores, setIsShownHighScores] = useState(false);
     const [isShownModal, setIsShownModal] = useState(false);
@@ -107,6 +108,7 @@ function Board() {
     };
 
     const generateMines = (newMinesBoard, clickedX, clickedY) => {
+        console.log('genrate mines')
         const minedBoard = [...newMinesBoard];
         let i = minesCount;
         let security = 150;
@@ -164,6 +166,7 @@ function Board() {
     };
 
     const startNewGame = (doSetMinesLeft) => {
+        setIsGameWon(false);
         setIsGameRun(false);
         setAreControlsDisabled(false);
         if (doSetMinesLeft) {
@@ -228,6 +231,7 @@ function Board() {
         setIsGameRun(false);
         setAllMinesFlagged();
         setIsRunTimer(false);
+        setIsGameWon(true);
         toggleShowModal();
     };
 
@@ -272,17 +276,12 @@ function Board() {
     };
 
     const leftClickOnField = (x, y) => {
-        const board = [...minesBoard];
         const {
             isMine: fieldIsMine,
             isClicked: fieldIsClicked,
             isFlagged: fieldIsFlagged,
-        } = board[x][y];
+        } = minesBoard[x][y];
         
-        if (isGameOver || !isGameRun) {
-            return;
-        }
-
         if (fieldIsFlagged) {
             return;
         }
@@ -296,8 +295,8 @@ function Board() {
             return;
         }
 
-        board[x][y].isClicked = true;
-        setMinesBoard(board);
+        minesBoard[x][y].isClicked = true;
+        setMinesBoard(minesBoard);
         floodFill(x, y);
         checkIsWon();
     };
@@ -326,7 +325,7 @@ function Board() {
     };
 
     const handleMouseUp = (e, cell) => {
-        if (isGameOver) {
+        if (isGameOver || isGameWon) {
             return;
         }
         const { x, y } = cell;
