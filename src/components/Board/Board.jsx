@@ -75,10 +75,6 @@ function Board() {
     }, []);
 
     const toggleShowModal = () => setIsShownModal(!isShownModal);
-    const onCloseModal = () => {
-        setCurrentScore(0);
-        toggleShowModal();
-    };
     const toggleHighScores = () => setIsShownHighScores(!isShownHighScores);
     const minesOnNeighbours = (x, y) => minesBoard[x][y].neighbourMines || 0;
     const isArrayInArray = (arrContainer, arrItem) =>
