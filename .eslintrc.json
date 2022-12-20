@@ -27,6 +27,12 @@
         ],
         "no-param-reassign": 0,
         "react/prop-types": "off",
-        "no-unused-vars": "warn"
+        "no-unused-vars": "warn",
+        "no-console": [
+            "warn",
+            {
+                "allow": ["error"]
+            }
+        ]
     }
 }
