@@ -11,7 +11,7 @@ Once upon a time being on an internship I wrote Minesweeper in vanilla JS. I rec
 A major refresh of the interface is planned, as well as the next point of exploring new technologies - TypeScript.
 
 ## Live version
-<a href="https://minesweeper--game.web.app/" target="_blank"><img src="https://techprimeweb.com/wp-content/uploads/2020/09/external-link-300x277.png" alt="Link" width="16" height="16"/> https://minesweeper--game.web.app/</a>
+<i>SOON</i>
 
 ## Run project locally
 
