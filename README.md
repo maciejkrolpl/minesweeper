@@ -11,7 +11,7 @@ Once upon a time being on an internship I wrote Minesweeper in vanilla JS. I rec
 A major refresh of the interface is planned, as well as the next point of exploring new technologies - TypeScript.
 
 ## Live version
-<i>SOON</i>
+<span style="font-size:2em">https://minesweeper.mkrol.dev</span>
 
 ## Run project locally
 
