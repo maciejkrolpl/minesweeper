@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Cell from '../Cell/Cell';
 import Controls from '../Controls/Controls';
 import HighScores from '../HighScores/HighScores';
@@ -450,7 +450,6 @@ function Board() {
                 />
             </div>
             <div className="board-container">
-                {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
                 <div
                     className="draggable-bar"
                     onMouseDown={mouseDown}
