@@ -30,6 +30,13 @@ function HighScores(props) {
     setUserName(e.target.value);
   };
 
+  const handleOnKeyDown = e => {
+    if (e.key === 'Enter'){
+      e.preventDefault();
+      saveScore(e);
+    }
+  }
+
   const hideForm = () => {
     const elem = document.getElementById('form');
     elem.style.display = 'none';
@@ -52,7 +59,7 @@ function HighScores(props) {
     levelsHighScore(thisLevel)
       .sort((a, b) => a.score - b.score)
       .map((thisScore) => (
-        <div key={thisScore.id}>
+        <div key={thisScore.id || ''}>
           <b title={thisScore.timestamp}>{thisScore.userName}</b> -{' '}
           {miliSecsToSecs(thisScore.score)}s -{' '}
           {new Date(thisScore.timestamp).toLocaleString()}
@@ -88,6 +95,7 @@ function HighScores(props) {
                 value={userName}
                 onChange={changeUserName}
                 ref={inputRef}
+                onKeyDown={handleOnKeyDown}
               />
               <Button type="button" onclick={saveScore}>
                 Save
