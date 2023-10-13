@@ -5,7 +5,9 @@ name: Deploy to Firebase Hosting on merge
 'on':
   push:
     branches:
-      - stage
+      - dev
+env:
+  VITE_FIREBASE_CONFIG: ${{ vars.FIREBASE_CONFIG_DEV }}
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
