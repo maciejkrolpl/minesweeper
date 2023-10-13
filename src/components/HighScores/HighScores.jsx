@@ -5,8 +5,7 @@ import Firebase from '../../firebase/firebase';
 const db = new Firebase('hiscores');
 
 function HighScores(props) {
-  const { score, level } = props;
-  const display = true;
+  const { score, level, display } = props;
   const inputRef = useRef(null);
   const [hiscores, setHiscores] = useState(null);
 
@@ -36,35 +35,29 @@ function HighScores(props) {
     elem.style.display = 'none';
   };
 
-  //   const saveScore = (e) => {
-  //       e.preventDefault();
-  //       const timestamp = Date.now();
-  //       const scoresList = [
-  //           ...levelsHighScore(level),
-  //           { score, userName, timestamp },
-  //       ].sort((a, b) => a.score - b.score);
-  //       const scoreToSave = {
-  //           ...highScores,
-  //           [level]: scoresList,
-  //       };
-  //       setHighScores(scoreToSave);
-  //       hideForm();
-  //       const event = new CustomEvent('setFocus', {
-  //           detail: { button: 'close' },
-  //       });
-  //       document.dispatchEvent(event);
-  //   };
+  const saveScore = (e) => {
+    e.preventDefault();
+    const timestamp = Date.now();
+    const newScore = { score, userName, timestamp, level };
+    setHiscores([...hiscores, newScore])
+    db.add(newScore);
+    hideForm();
+    const event = new CustomEvent('setFocus', {
+      detail: { button: 'close' },
+    });
+    document.dispatchEvent(event);
+  };
 
   const displayHighScores = (thisLevel) =>
     levelsHighScore(thisLevel)
       .sort((a, b) => a.score - b.score)
-      .map((thisScore) =>  (
-          <div key={thisScore.id}>
-            <b title={thisScore.timestamp}>{thisScore.userName}</b> -{' '}
-            {miliSecsToSecs(thisScore.score)}s - {new Date(thisScore.timestamp).toLocaleString()}
-          </div>
-        )
-      );
+      .map((thisScore) => (
+        <div key={thisScore.id}>
+          <b title={thisScore.timestamp}>{thisScore.userName}</b> -{' '}
+          {miliSecsToSecs(thisScore.score)}s -{' '}
+          {new Date(thisScore.timestamp).toLocaleString()}
+        </div>
+      ));
 
   if (display) {
     return (
@@ -79,33 +72,33 @@ function HighScores(props) {
     );
   }
 
-  //   return (
-  //       <div>
-  //           <p>Your score is {miliSecsToSecs(score)} seconds.</p>
-  //           {saveHighScore && (
-  //               <>
-  //                   <div id="form">
-  //                       Enter your name:
-  //                       <br />
-  //                       <form>
-  //                           <input
-  //                               type="text"
-  //                               name="userName"
-  //                               id="userName"
-  //                               value={userName}
-  //                               onChange={changeUserName}
-  //                               ref={inputRef}
-  //                           />
-  //                           <Button type="button" onclick={saveScore}>
-  //                               Save
-  //                           </Button>
-  //                       </form>
-  //                   </div>
-  //                   <div>{displayHighScores(level)}</div>
-  //               </>
-  //           )}
-  //       </div>
-  //   );
+  return (
+    <div>
+      <p>Your score is {miliSecsToSecs(score)} seconds.</p>
+      {saveHighScore && (
+        <>
+          <div id="form">
+            Enter your name:
+            <br />
+            <form>
+              <input
+                type="text"
+                name="userName"
+                id="userName"
+                value={userName}
+                onChange={changeUserName}
+                ref={inputRef}
+              />
+              <Button type="button" onclick={saveScore}>
+                Save
+              </Button>
+            </form>
+          </div>
+          <div>{displayHighScores(level)}</div>
+        </>
+      )}
+    </div>
+  );
 }
 
 export default HighScores;
