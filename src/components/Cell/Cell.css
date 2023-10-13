@@ -1,0 +1,89 @@
+.cell {
+  user-select: none;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  padding: 1px;
+  background-color: #ccc;
+  font-size: larger;
+  font-weight: bold;
+  text-align: center;
+  line-height: 20px;
+  border-style: solid;
+  border-width: 2px;
+  border-top-color: #aaa;
+  border-left-color: #aaa;
+  border-bottom-color: #777;
+  border-right-color: #777;
+  display: block;
+}
+
+.cell-clicked {
+  border-width: 1px;
+  border-top-color: #bbb;
+  border-left-color: #bbb;
+  border-right-color: #ddd;
+  border-bottom-color: #ddd;
+}
+
+.mines-1::before {
+  color: blue;
+  content: '1';
+}
+
+.mines-2::before {
+  content: '2';
+  color: rgb(0, 123, 0);
+}
+
+.mines-3::before {
+  content: '3';
+  color: red;
+}
+
+.mines-4::before {
+  content: '4';
+  color: rgb(0, 0, 123);
+}
+
+.mines-5::before {
+  content: '5';
+  color: rgb(123, 0, 0);
+}
+
+.mines-6::before {
+  content: '6';
+  color: rgb(0, 123, 123);
+}
+
+.mines-7::before {
+  content: '7';
+  color: rgb(0, 0, 0);
+}
+
+.mines-8::before {
+  content: '8';
+  color: rgb(123, 123, 123);
+}
+
+.cell-mine,
+.cell-wrong {
+  border-color: red;
+}
+
+.cell-flagged::before {
+  content: '🚩';
+  font-size: 0.75em;
+}
+
+.cell-mine::before,
+.cell-wrong::before {
+  content: '☀'
+}
+
+.cell-wrong {
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 100 100'><path d='M 4 0 L 4 0 L 0 0 L 0 4 L 96 100 L 100 100 L 100 96' fill='red' /><path d='M 96 0 L 96 0 L 100 0 L 100 4 L 4 100 L 0 100 L 0 96' fill='red' /></svg>");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 100% 100%, auto;
+}

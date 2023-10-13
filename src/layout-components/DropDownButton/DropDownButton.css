@@ -1,0 +1,16 @@
+.dropdown {
+    position: relative;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown-content {
+    position: absolute;
+    padding: 2px;
+    border: 1px solid #767676;
+    border-radius: 3px;
+    background-color: #efefef;
+    min-width: 160px;
+    z-index: 1;
+}
